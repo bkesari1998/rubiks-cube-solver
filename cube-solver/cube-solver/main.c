@@ -181,6 +181,7 @@ const int Y_MID[9] = { 3, 4, 5, 12, DNE, 13, 20, 21, 22 };
 // Middle Layer perpendicular to z piece indexes in pieces[] of a Cube struct
 const int Z_MID[9] = { 9, 10, 11, 12, DNE, 13, 14, 15, 16 };
 
+// Enumerations and structures
 
 // Define possible colors on a Rubik's cube
 typedef enum colors {
@@ -231,8 +232,91 @@ typedef struct cubes {
 // Define DNE constant for arrays
 #define DNE -1
 
+// Function prototypes
+
+// User input fuctions
+void getColors(char* colorArr);
+bool isColor(char input);
+
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
+    
+    // Create an array to hold user's input
+    char colorArr[NUM_SQUARES];
+    
+    // Get user input
+    getColors(colorArr);
+
+    
     return 0;
 }
+
+// User input functions
+
+/**
+ * Gathers user input of color abbreviations and stores the input in a character array.
+ * Makes sure that user input is of proper length and contains allowable values.
+ * Exits the function if the user input is invalid.
+ *
+ * @param colorArr
+ * A pointer to an array used to hold the color abbreviations from the user input
+ */
+void getColors(char* colorArr)
+{
+    char ch;
+    
+    // Prompt user to enter color abbreviations string
+    printf("Enter Rubik's cube permutation:\n");
+    
+    // Iterate through input and populate the array with the abbreviations
+    for (int i = 0; i < NUM_SQUARES; ++i)
+    {
+        scanf("%c", &ch);
+        
+        // Make sure input char is valid
+        if (isColor(ch))
+        {
+            *colorArr = ch;
+            ++colorArr;
+        }
+        // Exit the function if char is invalid
+        else
+        {
+            printf("Invalid input.\n");
+            exit(1);
+        }
+    }
+    
+    // Check if input length does not exceed NUM_SQUARES
+    scanf("%c", &ch);
+    // Exit function if input is too long
+    if (ch != '\n')
+    {
+        printf("Invalid input.\n");
+        exit(1);
+    }
+}
+
+/**
+ * Checks if a character is an abbreviation for a color on a Rubiks cube
+ *
+ * @param input
+ * The character to be checked
+ *
+ * @return
+ * True if input is a valid char
+ * False if input is not a valid char
+ */
+bool isColor(char input)
+{
+    // Check if input is color abbreviation
+    if (input == 'r' || input == 'g' || input == 'y'
+        || input == 'w' || input == 'o' || input == 'b')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
