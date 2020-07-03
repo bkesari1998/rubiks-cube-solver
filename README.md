@@ -13,4 +13,11 @@ The user enters a string into the terminal which coresponds to the colors on eac
 
 The order in which each square color abbreviation appears in the input string matters, as each abbreviation corresponds to a spesific square on the Rubik's cube. The order in which the abbreviations appear in the string should correspond to:
 
- 
+ ![alt text](Cube-Layout.png)
+
+This is the input string for a completed cube: "wwwwwwwwwgggggggggrrrrrrrrrbbbbbbbbboooooooooyyyyyyyyy"
+<br />
+This is a input string for a mixed up cube: "wowgybwyogygybyoggrowbrgywrborwggybrbwororbwborgowryby"
+
+### Outputs
+The program outputs the steps required to complete the cube.
