@@ -14,40 +14,6 @@
 #include <stdbool.h>
 #include "rubiks.h"
 
-// Function prototypes
-
-// User input fuctions
-void getColors(char* colorArr);
-bool isColor(char input);
-
-// Cube creation functions
-void createCube(Cube* pCube, char* colors);
-PieceType checkPieceType(int index);
-void assignPieceColors(Color* pXCol, Color* pYCol, Color* pZCol, int pieceNum, char* colors);
-void assignPieceCoords(int* pX, int* pY, int* pZ, int pieceNum);
-Color abbreiveToColor(char colorAbreive);
-
-// Cube manipulation
-void rotateFrontFace(Cube* pCube, bool isCntr);
-void rotateBackFace(Cube* pCube, bool isCntr);
-void rotateLeftFace(Cube* pCube, bool isCntr);
-void rotateRightFace(Cube* pCube, bool isCntr);
-void rotateTopFace(Cube* pCube, bool isCntr);
-void rotateBottomFace(Cube* pCube, bool isCntr);
-void rotateMidX(Cube* pCube, bool isCntr);
-void rotateMidY(Cube* pCube, bool isCntr);
-void rotateMidZ(Cube* pCube, bool isCntr);
-void turnX(Cube* pCube, bool isCntr);
-void turnY(Cube* pCube, bool isCntr);
-void turnZ(Cube* pCube, bool isCntr);
-
-// Matrix rotation
-void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
-void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
-
-// Cube printing
-void printCube(Cube* pCube);
-
 int main(int argc, const char * argv[]) {
     char colorArr[NUM_SQUARES];
     Cube rubiks;
@@ -56,7 +22,7 @@ int main(int argc, const char * argv[]) {
     getColors(colorArr);
     createCube(&rubiks, colorArr);
     printCube(&rubiks);
-    rotateLeftFace(&rubiks, true);
+    solveFirstLayerCross(&rubiks);
     printCube(&rubiks);
     
     return 0;
@@ -403,6 +369,32 @@ Color abbreiveToColor(char colorAbreive)
             return WHITE;
         case 'y':
             return YELLOW;
+        default:
+            return UNDEFINED;
+    }
+}
+/**
+ * Gets the opposite color of a square on a rubiks cube
+ *
+ * @return
+ *  The opposite color
+ */
+Color getOpposite(Color squareColor)
+{
+    switch(squareColor)
+    {
+        case WHITE:
+            return YELLOW;
+        case YELLOW:
+            return WHITE;
+        case ORANGE:
+            return RED;
+        case RED:
+            return ORANGE;
+        case BLUE:
+            return GREEN;
+        case GREEN:
+            return BLUE;
         default:
             return UNDEFINED;
     }
@@ -1168,6 +1160,541 @@ void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW])
     rotateMatCntr(face);
     rotateMatCntr(face);
 }
+
+
+// Cube solving functions
+
+/**
+ * Solves the cross on the first layer of the cube
+ *
+ * @param pCube
+ * Pointer to a cube struct
+ */
+void solveFirstLayerCross(Cube* pCube)
+{
+    Piece piece;
+    
+    // Get center piece color of top face
+    Color faceColor = pCube->pieces[TOP_CENTER].z;
+    
+    // Get opposite color
+    Color oppColor = getOpposite(faceColor);
+    
+    // Create an array holding edge pieces of desired color
+    Piece edgePieces[NUM_EDGES_ON_FACE];
+    locateFirstLayerEdges(pCube, edgePieces, oppColor);
+    
+    // Loop through edgePieces array
+    for (int i = 0; i < NUM_EDGES_ON_FACE; ++i)
+    {
+        piece = edgePieces[i];
+        // Solve daisy
+        // Current edge is not in daisy
+        if (!(edgeInDaisy(pCube, piece, oppColor)))
+        {
+            // Piece is on top face but orriented incorrectly
+            if (piece.zCoord == 0 && piece.z != oppColor)
+            {
+                daisyTop(pCube, piece, oppColor);
+                
+            }
+                // Piece is in middle layer
+            else if (piece.zCoord == 1)
+            {
+                daisyMid(pCube, piece, oppColor);
+            }
+            // Piece is in bottom layer
+            else
+            {
+                daisyBottom(pCube, piece, oppColor);
+            }
+            // Relocate edges
+            if (i < NUM_EDGES_ON_FACE - 1)
+            {
+                locateFirstLayerEdges(pCube, edgePieces, oppColor);
+            }
+        }
+    }
+    // Solve cross
+    daisyToCross(pCube, oppColor);
+}
+
+/**
+ * Locates the edge pieces that have a square the same color as the center of the cross
+ *
+ * @param pCube
+ *  A pointer to a Cube structure
+ *
+ * @param edgePieces
+ * An array holding the edge pieces
+ *
+ * @param edgeColor
+ *  The desired color
+ */
+void locateFirstLayerEdges(Cube* pCube, Piece edgePieces[], Color edgeColor)
+{
+    Piece piece;
+    int cntr = 0;
+    
+    // Iterate through all edge pieces
+    for (int i = 0; i < NUM_EDGE; ++i)
+    {
+        // Assign piece to an edge piece on cube
+        piece = pCube->pieces[EDGE_POS[i]];
+        
+        // Check if piece has desired color
+        if (piece.x == edgeColor || piece.y == edgeColor || piece.z == edgeColor)
+        {
+            // Add piece to array holding edge pieces containg desired color
+            edgePieces[cntr] = piece;
+            
+            // Advance counter
+            ++cntr;
+            
+            // Break loop if all edge pieces of desired color were found
+            if (cntr >= NUM_EDGES_ON_FACE)
+            {
+                break;
+            }
+        }
+    }
+}
+
+/**
+ * Checks if edge piece is in the top daisy
+ *
+ * @param pCube
+ * Pointer to a Cube structure
+ *
+ * @param edge
+ * The edge piece to check
+ *
+ * @return
+ * True if the piece is in the daisy
+ * False if the piece is not in the daisy
+ */
+bool edgeInDaisy(Cube* pCube, Piece edge, Color oppColor)
+{
+    
+    // Check that edge is an edge piece
+    if (edge.pieceType == EDGE)
+    {
+        // Check if it the piece is in a daisy and oriented correctly
+        if ((edge.pieceNum == TOP_BACK_EDGE || edge.pieceNum == TOP_LEFT_EDGE ||
+             edge.pieceNum == TOP_RIGHT_EDGE || edge.pieceNum == TOP_FRONT_EDGE)
+            && edge.z == oppColor)
+        {
+            return true;
+        }
+    }
+    
+    // Piece not in correct position or not an edge piece
+    return false;
+}
+
+/**
+ * Places an edge piece in the daisy if the piece is located in the top layer
+ *
+ * @param pCube
+ * Pointer to a cube structure
+ *
+ * @param piece
+ * The piece to be placed in the daisy
+ *
+ * @param oppColor
+ * The opposite color to the daisy center
+ */
+void daisyTop(Cube* pCube, Piece piece, Color oppColor)
+{
+    // Put piece in daisy if originally on back face
+    if (piece.yCoord == 0)
+    {
+        // Move out of back face
+        rotateBackFace(pCube, false);
+        
+        // Rotate top face until edge location not occupied by a daisy edge
+        // Compare color of edge with the color of the piece it will replace
+        while (oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
+        {
+            // Rotate the top face of the cube if a daisy piece is in that position
+            rotateTopFace(pCube, true);
+        }
+        // Put piece in daisy
+        rotateRightFace(pCube, false);
+    }
+    // Put piece in daisy if originally on front face
+    else if (piece.yCoord == 2)
+    {
+        // Move out of top face
+        rotateFrontFace(pCube, true);
+        // Rotate top face until edge location not occupied by a daisy edge
+        // Compare color of edge with the color of the piece it will replace
+        while (oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
+        {
+            // Rotate the top face of the cube if a daisy piece is in that position
+            rotateTopFace(pCube, true);
+        }
+        // Put piece in daisy
+        rotateLeftFace(pCube, true);
+    }
+    // Put Piece in daisy if originally on right/left face
+    else
+    {
+        // Piece originally on left face
+        if (piece.xCoord == 0)
+        {
+            // Move piece out of top face
+            rotateLeftFace(pCube, false);
+            
+            // Rotate top face until edge location not occupied by a daisy edge
+            // Compare color of edge with the color of the piece it will replace
+            while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
+            {
+                // Rotate the top face of the cube if a daisy piece is in that position
+                rotateTopFace(pCube, true);
+            }
+            // Put piece in daisy
+            rotateFrontFace(pCube, false);
+        }
+        // Piece originally on right face
+        else
+        {
+            // Move piece out of top face
+            rotateRightFace(pCube, true);
+            
+            // Rotate top face until edge location not occupied by a daisy edge
+            while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
+            {
+                rotateTopFace(pCube, true);
+            }
+            // Put piece in daisy
+            rotateBackFace(pCube, true);
+        }
+    }
+}
+
+/**
+ * Puts an edge piece in the daisy if the piece is located in the mid layer
+ *
+ * @param pCube
+ * Pointer to a cube structure
+ *
+ * @param piece
+ * The piece to be placed in the daisy
+ *
+ * @param oppColor
+ * The opposite color to the daisy center
+ */
+void daisyMid(Cube* pCube, Piece piece, Color oppColor)
+{
+    // Desired color is on right or left face
+    if (piece.x == oppColor)
+    {
+        // Desired color is on left face
+        if (piece.xCoord == 0)
+        {
+            // Desired piece is on back face
+            if (piece.yCoord == 0)
+            {
+                // Rotate top face until edge edge location not occupied with a daisy edge
+                while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateBackFace(pCube, false);
+            }
+            // Desired piece is on front face
+            else
+            {
+                // Rotate top face until edge edge location not occupied with a daisy edge
+                while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateFrontFace(pCube, false);
+            }
+        }
+        // Desired color is on right face
+        else
+        {
+            // Desired piece is on back face
+            if (piece.yCoord == 0)
+            {
+                // Rotate top face until edge location not occupied with a daisy edge
+                while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateBackFace(pCube, true);
+            }
+            // Desired piece is on front face
+            else
+            {
+                // Rotate top face until edge location not occupied with a daisy edge
+                while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateFrontFace(pCube, true);
+            }
+        }
+    }
+    // Desired color is on front or back face
+    else
+    {
+        // Desired color is on back face
+        if (piece.yCoord == 0)
+        {
+            // Desired piece is on left face
+            if (piece.xCoord == 0)
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while(oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateLeftFace(pCube, false);
+            }
+            // Desired piece is on right face
+            else
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while(oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateRightFace(pCube, false);
+            }
+        }
+        // Desired color is on front face
+        else
+        {
+           // Desired piece is on left face
+            if (piece.xCoord == 0)
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while(oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateLeftFace(pCube, true);
+            }
+            // Desired piece is on right face
+            else
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while(oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Put piece in daisy
+                rotateRightFace(pCube, true);
+            }
+        }
+    }
+}
+
+/**
+ * @param pCube
+ * Pointer to a cube structure
+ *
+ * @param piece
+ * The piece to be placed in the daisy
+ *
+ * @param oppColor
+ * The opposite color to the center of the daisy
+ */
+void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
+{
+    // Piece is oriented incorrectly
+    if (piece.z != oppColor)
+    {
+        // Piece is on left face
+        if (piece.xCoord == 0)
+        {
+            // Rotate top until edge location not occupied with daisy edge
+            while (oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
+            {
+                rotateTopFace(pCube, true);
+            }
+            // Place piece in middle layer
+            rotateLeftFace(pCube, true);
+            // Place piece in daisy
+            daisyMid(pCube, piece, oppColor);
+        }
+        // Piece is on front or back face
+        else if (piece.xCoord == 1)
+        {
+            // Piece is on back face
+            if (piece.yCoord == 0)
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Place piece in middle layer
+                rotateBackFace(pCube, true);
+                // Place piece in daisy
+                daisyMid(pCube, piece, oppColor);
+            }
+            // Piece is on front face
+            else
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Place piece in middle layer
+                rotateFrontFace(pCube, true);
+                // Place piece in daisy
+                daisyMid(pCube, piece, oppColor);
+            }
+        }
+        // Piece is on right face
+        else
+        {
+            // Rotate top until edge location not occupied with daisy edge
+            while (oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
+            {
+                rotateTopFace(pCube, true);
+            }
+            // Place piece in middle layer
+            rotateRightFace(pCube, true);
+            // Place piece in daisy
+            daisyMid(pCube, piece, oppColor);
+        }
+    }
+    // Piece is oriented correctly
+    else
+    {
+        // Piece is on left face
+        if (piece.xCoord == 0)
+        {
+            // Rotate top until edge location not occupied with daisy edge
+            while (oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
+            {
+                rotateTopFace(pCube, true);
+            }
+            // Place piece in daisy
+            rotateLeftFace(pCube, true);
+            rotateLeftFace(pCube, true);
+        }
+        // Piece is on front or back face
+        else if (piece.xCoord == 1)
+        {
+            // Piece is on back face
+            if (piece.yCoord == 0)
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Place piece in daisy
+                rotateBackFace(pCube, true);
+                rotateBackFace(pCube, true);
+            }
+            // Piece is on front face
+            else
+            {
+                // Rotate top until edge location not occupied with daisy edge
+                while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Place piece in daisy
+                rotateFrontFace(pCube, true);
+                rotateFrontFace(pCube, true);
+            }
+        }
+        // Piece is on right face
+        else
+        {
+            // Rotate top until edge location not occupied with daisy edge
+            while (oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
+            {
+                rotateTopFace(pCube, true);
+            }
+            // Place piece in daisy
+            rotateRightFace(pCube, true);
+            rotateRightFace(pCube, true);
+        }
+    }
+}
+
+/**
+ * Moves edge pieces from top daisy to bottom cross
+ *
+ * @param pCube
+ * Pointer to a cube structure
+ */
+void daisyToCross(Cube* pCube, Color oppColor)
+{
+    for (int i = 0; i < NUM_EDGES_ON_FACE; ++i)
+    {
+        if (i == 0)
+        {
+            // Check that top back edge piece is on correct face
+            while (pCube->pieces[TOP_BACK_EDGE].y != pCube->pieces[BACK_CENTER].y)
+            {
+                // Rotate top until matching piece found
+                rotateTopFace(pCube, true);
+            }
+            // Put piece in place
+            rotateBackFace(pCube, true);
+            rotateBackFace(pCube, true);
+        }
+        else if (i == 1)
+        {
+           // Check that top left edge piece is on correct face and that piece is a cross piece
+            while ((pCube->pieces[TOP_LEFT_EDGE].x != pCube->pieces[LEFT_CENTER].x) || pCube->pieces[TOP_LEFT_EDGE].z != oppColor)
+            {
+                // Rotate top until matching piece found
+               rotateTopFace(pCube, true);
+            }
+            // Put piece in place
+            rotateLeftFace(pCube, true);
+            rotateLeftFace(pCube, true);
+        }
+        else if (i == 2)
+        {
+           // Check that top right edge piece is on correct face
+            while ((pCube->pieces[TOP_RIGHT_EDGE].x != pCube->pieces[RIGHT_CENTER].x) || pCube->pieces[TOP_RIGHT_EDGE].z != oppColor)
+            {
+                // Rotate top until matching piece found
+               rotateTopFace(pCube, true);
+            }
+            // Put piece in place
+            rotateRightFace(pCube, true);
+            rotateRightFace(pCube, true);
+        }
+        else
+        {
+           // Check that top front edge piece is on correct face
+            while ((pCube->pieces[TOP_FRONT_EDGE].y != pCube->pieces[FRONT_CENTER].y) || pCube->pieces[TOP_FRONT_EDGE].z != oppColor)
+            {
+                // Rotate top until matching piece found
+               rotateTopFace(pCube, true);
+            }
+            // Put piece in place
+            rotateFrontFace(pCube, true);
+            rotateFrontFace(pCube, true);
+        }
+    }
+}
+
+
+
+// Cube printing functions
 
 /**
  * Prints a flattened Rubiks cube with numbers corresponding to each sqauare
