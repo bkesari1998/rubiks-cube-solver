@@ -297,6 +297,11 @@ void solveTopCorners(Cube* pCube);
 void orientCubeForTopCornerSwap(Cube* pCube);
 bool checkTopCornersSolved(Cube* pCube);
 
+// Solve top edges
+void solveTopEdges(Cube* pCube);
+void orientCubeForTopEdgeSolve(Cube* pCube);
+bool checkTopEdgeSolved(Cube* pCube);
+
 // Matrix rotation
 void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
@@ -323,6 +328,8 @@ int main(int argc, const char * argv[]) {
     orientTopCorners(&rubiks);
     printCube(&rubiks);
     solveTopCorners(&rubiks);
+    printCube(&rubiks);
+    solveTopEdges(&rubiks);
     printCube(&rubiks);
     
     return 0;
@@ -2926,6 +2933,60 @@ bool checkTopCornersSolved(Cube* pCube)
         return true;
     }
     // Corners not in place
+    return false;
+}
+
+// Solve top edges
+void solveTopEdges(Cube* pCube)
+{
+    while (!(checkTopEdgeSolved(pCube)))
+    {
+        orientCubeForTopEdgeSolve(pCube);
+        printCube(pCube);
+        
+        rotateFrontFace(pCube, false);
+        rotateFrontFace(pCube, false);
+        rotateTopFace(pCube, false);
+        rotateLeftFace(pCube, false);
+        rotateRightFace(pCube, false);
+        rotateFrontFace(pCube, false);
+        rotateFrontFace(pCube, false);
+        rotateLeftFace(pCube, true);
+        rotateRightFace(pCube, true);
+        rotateTopFace(pCube, false);
+        rotateFrontFace(pCube, false);
+        rotateFrontFace(pCube, false);
+    }
+}
+
+void orientCubeForTopEdgeSolve(Cube* pCube)
+{
+    for(;;)
+    {
+        for (int i = 0; i < NUM_PIECES_IN_ROW; ++i)
+        {
+            if (pCube->pieces[BACK_POS[i]].y != pCube->pieces[BACK_CENTER].y)
+            {
+                turnZ(pCube, true);
+                break;
+            }
+            if (i == NUM_PIECES_IN_ROW - 1)
+            {
+                return;
+            }
+        }
+    }
+}
+bool checkTopEdgeSolved(Cube* pCube)
+{
+    if ((pCube->pieces[TOP_BACK_EDGE].y == pCube->pieces[BACK_CENTER].y)
+        && (pCube->pieces[TOP_LEFT_EDGE].x == pCube->pieces[LEFT_CENTER].x)
+        && (pCube->pieces[TOP_RIGHT_EDGE].x == pCube->pieces[RIGHT_CENTER].x)
+        && (pCube->pieces[TOP_FRONT_EDGE].y == pCube->pieces[FRONT_CENTER].y))
+    {
+        return true;
+    }
+    
     return false;
 }
 
