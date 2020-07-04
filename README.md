@@ -1,6 +1,7 @@
 # rubiks-cube-solver
 This is a C program that solves a Rubik's Cube.
 
+## Usage
 ### Inputs
 The user enters a string into the terminal which coresponds to the colors on each square of a Rubiks cube. The string is a series of single letter color abbreiviations. The abbreviations are:
 
