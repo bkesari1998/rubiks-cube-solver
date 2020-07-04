@@ -292,6 +292,11 @@ void orientTopCorners(Cube* pCube);
 void orientCubeForTopCorners(Cube* pCube, Color faceColor);
 bool checkTopCorners(Cube* pCube, Color faceColor);
 
+// Top corner solving functions
+void solveTopCorners(Cube* pCube);
+void orientCubeForTopCornerSwap(Cube* pCube);
+bool checkTopCornersSolved(Cube* pCube);
+
 // Matrix rotation
 void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
@@ -316,6 +321,8 @@ int main(int argc, const char * argv[]) {
     createTopCross(&rubiks);
     printCube(&rubiks);
     orientTopCorners(&rubiks);
+    printCube(&rubiks);
+    solveTopCorners(&rubiks);
     printCube(&rubiks);
     
     return 0;
@@ -2837,6 +2844,88 @@ bool checkTopCorners(Cube* pCube, Color faceColor)
     }
     
     // Top corners not placed
+    return false;
+}
+
+// Top corner solving functions
+
+/**
+ * Solves the top corners
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ */
+void solveTopCorners(Cube* pCube)
+{
+    while(!(checkTopCornersSolved(pCube)))
+    {
+        orientCubeForTopCornerSwap(pCube);
+        printCube(pCube);
+        
+        rotateRightFace(pCube, false);
+        rotateFrontFace(pCube, false);
+        rotateRightFace(pCube, false);
+        rotateBackFace(pCube, true);
+        rotateBackFace(pCube, true);
+        
+        rotateRightFace(pCube, true);
+        rotateFrontFace(pCube, true);
+        rotateRightFace(pCube, false);
+        rotateBackFace(pCube, true);
+        rotateBackFace(pCube, true);
+        
+        rotateRightFace(pCube, true);
+        rotateRightFace(pCube, true);
+        rotateTopFace(pCube, true);
+    }
+}
+
+/**
+ * Orients the cube to solve the top corners
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ */
+void orientCubeForTopCornerSwap(Cube* pCube)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        if ((pCube->pieces[TOP_RIGHT_FRONT_CORNER].x == pCube->pieces[RIGHT_CENTER].x)
+            && (pCube->pieces[TOP_RIGHT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y)
+            && (pCube->pieces[TOP_LEFT_FRONT_CORNER].x == pCube->pieces[LEFT_CENTER].x)
+            && (pCube->pieces[TOP_LEFT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y))
+        {
+            turnZ(pCube, true);
+            turnZ(pCube, true);
+            return;
+        }
+        turnZ(pCube, true);
+    }
+    
+    while ((pCube->pieces[TOP_RIGHT_FRONT_CORNER].x != pCube->pieces[RIGHT_CENTER].x)
+    || (pCube->pieces[TOP_RIGHT_FRONT_CORNER].y != pCube->pieces[FRONT_CENTER].y))
+    {
+        rotateTopFace(pCube, true);
+    }
+}
+
+/**
+ * Checks if the top corners are solved
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ */
+bool checkTopCornersSolved(Cube* pCube)
+{
+    // Corners in place
+    if ((pCube->pieces[TOP_RIGHT_FRONT_CORNER].x == pCube->pieces[RIGHT_CENTER].x) && (pCube->pieces[TOP_RIGHT_BACK_CORNER].x == pCube->pieces[RIGHT_CENTER].x)
+        && (pCube->pieces[TOP_RIGHT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y) && (pCube->pieces[TOP_RIGHT_BACK_CORNER].y == pCube->pieces[BACK_CENTER].y)
+        && (pCube->pieces[TOP_LEFT_FRONT_CORNER].x == pCube->pieces[LEFT_CENTER].x) && (pCube->pieces[TOP_LEFT_BACK_CORNER].x == pCube->pieces[LEFT_CENTER].x)
+        && (pCube->pieces[TOP_LEFT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y) && (pCube->pieces[TOP_LEFT_BACK_CORNER].y == pCube->pieces[BACK_CENTER].y))
+    {
+        return true;
+    }
+    // Corners not in place
     return false;
 }
 
