@@ -6,6 +6,9 @@
 //  Copyright © 2020 Bharat Kesari. All rights reserved.
 //
 
+// Solved Cube: wwwwwwwwwooooooooogggggggggrrrrrrrrrbbbbbbbbbyyyyyyyyy
+// wowgybwyogygybyoggrowbrgywrborwggybrbwororbwborgowryby
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -238,14 +241,20 @@ typedef struct cubes {
 void getColors(char* colorArr);
 bool isColor(char input);
 
+// Cube creation functions
+void createCube(Cube* pCube, char* colors);
+PieceType checkPieceType(int index);
+void assignPieceColors(Color* pXCol, Color* pYCol, Color* pZCol, int pieceNum, char* colors);
+void assignPieceCoords(int* pX, int* pY, int* pZ, int pieceNum);
+Color abbreiveToColor(char colorAbreive);
+
 int main(int argc, const char * argv[]) {
-    
-    // Create an array to hold user's input
     char colorArr[NUM_SQUARES];
+    Cube rubiks;
     
     // Get user input
     getColors(colorArr);
-
+    createCube(&rubiks, colorArr);
     
     return 0;
 }
@@ -320,3 +329,278 @@ bool isColor(char input)
     }
 }
 
+// Cube creation functions
+
+/**
+ * Builds the structure for a Rubik's cube
+ *
+ * @param pCube
+ * Pointer to an uninitialized cube
+ */
+void createCube(Cube* pCube, char* colors)
+{
+    int xCoord = DNE, yCoord = DNE, zCoord = DNE;
+    Color xCol, yCol, zCol;
+    PieceType type;
+    
+    // Create 26 Rubik's Pieces
+    for (int i = 0; i < NUM_PIECES; ++i)
+    {
+        // Get the piece type based on position index
+        type = checkPieceType(i);
+        assignPieceCoords(&xCoord, &yCoord, &zCoord, i);
+        assignPieceColors(&xCol, &yCol, &zCol, i, colors);
+        
+        // Create a piece based on the data
+        Piece piece = {type, i, xCoord, yCoord, zCoord, xCol, yCol, zCol};
+        xCoord = DNE;
+        yCoord = DNE;
+        zCoord = DNE;
+        
+        // Insert the piece in the cube's piece array
+        pCube->pieces[i] = piece;
+    }
+}
+
+/**
+ * @param pieceNum
+ * The index of the piece in pieces of a Cube struct
+ *
+ * @return
+ * The enumeration for the type of the piece
+*/
+PieceType checkPieceType(int pieceNum)
+{
+    // Check if piece is edge piece
+    for (int i = 0; i < NUM_EDGE; i++) {
+
+        // If position is a edge position
+       if (EDGE_POS[i] == pieceNum)
+           return EDGE;
+    }
+    
+    // Check if piece is corner piece
+    for (int i = 0; i < NUM_CORNER; i++) {
+
+        // If position is a edge position
+       if (CORNER_POS[i] == pieceNum)
+           return CORNER;
+    }
+    
+    // Check if piece is center piece
+    for (int i = 0; i < NUM_CENTER; i++) {
+
+        // If position is a edge position
+       if (CENTER_POS[i] == pieceNum)
+           return CENTER;
+    }
+    
+    return NONE;
+}
+
+/**
+ * Assigns the x, y and  colors to a Piece structure based on user input
+ *
+ * @param pXCol
+ * Pointer to a varaiable holding piece's x face color
+ *
+ * @param pYCol
+ * Pointer to a variable holding piece's y face color
+ *
+ * @param pZCol
+ * Pointer to a variable holding piece's z face color
+ *
+ * @param pieceNum
+ * The piece's number in a Cube structure's pieces array
+ *
+ * @param colors
+ * An array of user inputed characters corresponding to the colors on each face
+ */
+void assignPieceColors(Color* pXCol, Color* pYCol, Color* pZCol, int pieceNum, char* colors)
+{
+    char xColAbb, yColAbb, zColAbb;
+    
+    // Check if current piece has an X color
+    if (X_INDEXES[pieceNum] == DNE)
+    {
+        *pXCol = UNDEFINED;
+    }
+    // Piece has an X color
+    else
+    {
+        // Get the color abbreiviation
+        xColAbb = colors[X_INDEXES[pieceNum]];
+        // Convert the abbreviation to a color
+        *pXCol = abbreiveToColor(xColAbb);
+    }
+    
+    // Check if current piece has an Y color
+    if (Y_INDEXES[pieceNum] == DNE)
+    {
+        *pYCol = UNDEFINED;
+    }
+    // Piece has an Y color
+    else
+    {
+        // Get the color abbreiviation
+        yColAbb = colors[Y_INDEXES[pieceNum]];
+        // Convert the abbreviation to a color
+        *pYCol = abbreiveToColor(yColAbb);
+    }
+    
+    // Check if current piece has an Z color
+    if (Z_INDEXES[pieceNum] == DNE)
+     {
+         *pZCol = UNDEFINED;
+     }
+    // Piece has an Z color
+     else
+     {
+         // Get the color abbreiviation
+         zColAbb = colors[Z_INDEXES[pieceNum]];
+         // Convert the abbreviation to a color
+         *pZCol = abbreiveToColor(zColAbb);
+     }
+}
+
+/**
+ * Assigns the x, y, and z coordinates of a piece based on its index
+ *
+ * @param pX
+ * Pointer to variable storing piece's x coordinate
+ *
+ * @param pY
+ * Pointer to variable storing piece's y coordinate
+ *
+ * @param pZ
+ * Pointer to variable storing piece's z coordinate
+ *
+ * @param pieceNum
+ * The index of the piece in the pieces array of a cube structure
+ */
+void assignPieceCoords(int* pX, int* pY, int* pZ, int pieceNum)
+{
+
+    // Assign x coordinate
+    // Check if piece is on left face
+    for (int j = 0; j < NUM_PIECES_ON_FACE; ++j)
+    {
+        if (pieceNum == LEFT_POS[j])
+        {
+            *pX = 0;
+            break;
+        }
+    }
+    
+    // If not on left face, check if piece is in middle layer
+    if (*pX != 0)
+    {
+        for (int j = 0; j < NUM_PIECES_ON_FACE; ++j)
+        {
+            if (pieceNum == X_MID[j])
+            {
+                *pX = 1;
+                break;
+            }
+        }
+    }
+    
+    // If not on left face or middle layer, piece is on right face
+    if (*pX != 0 & *pX != 1)
+    {
+        *pX = 2;
+    }
+    
+    // Assign y coordinate
+    // Check if piece is on back face
+    for (int j = 0; j < NUM_PIECES_ON_FACE; ++j)
+    {
+        if (pieceNum == BACK_POS[j])
+        {
+            *pY = 0;
+            break;
+        }
+    }
+    
+    // If not on back face, check if piece is in middle layer
+    if (*pY != 0)
+    {
+        for (int j = 0; j < NUM_PIECES_ON_FACE; ++j)
+        {
+            if (pieceNum == Y_MID[j])
+            {
+                *pY = 1;
+                break;
+            }
+        }
+    }
+    
+    // If not on back or middle layer, piece is on front face
+    if (*pY != 0 && *pY != 1)
+    {
+        *pY = 2;
+    }
+    
+    
+    
+    // Assign z coordinate
+    // Check if piece is on top face
+    for (int j = 0; j < NUM_PIECES_ON_FACE; ++j)
+    {
+        if (pieceNum == TOP_POS[j])
+        {
+            *pZ = 0;
+            break;
+        }
+    }
+    
+    // If not on top face, check if piece is on middle layer
+    if (*pZ != 0)
+    {
+        for (int j = 0; j < NUM_PIECES_ON_FACE; ++j)
+        {
+            if (pieceNum == Z_MID[j])
+            {
+                *pZ = 1;
+                break;
+            }
+        }
+    }
+    
+    // If not on top face or middle layer, piece on bottom face
+    if (*pZ != 0 && *pZ != 1)
+    {
+        *pZ = 2;
+    }
+}
+
+/**
+ * Converts a color abbreiviation to a Color enum
+ *
+ * @param colorAbreive
+ * The abbreiviation of a color
+ *
+ * @return
+ * A Color enumeration
+ */
+Color abbreiveToColor(char colorAbreive)
+{
+    // Return the correct color based on the abbreiviation
+    switch(colorAbreive)
+    {
+        case 'r':
+            return RED;
+        case 'g':
+            return GREEN;
+        case 'o':
+            return ORANGE;
+        case 'b':
+            return BLUE;
+        case 'w':
+            return WHITE;
+        case 'y':
+            return YELLOW;
+        default:
+            return UNDEFINED;
+    }
+}
