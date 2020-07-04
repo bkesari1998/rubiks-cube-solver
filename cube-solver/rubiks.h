@@ -265,11 +265,21 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor);
 void daisyBottom(Cube* pCube, Piece piece, Color oppColor);
 void daisyToCross(Cube* pCube, Color oppColor);
 
+// First layer corners functions
+void solveFirstLayerCorners(Cube* pCube);
+void locateFirstLayerCorners(Cube* pCube, Piece faceCorners[], Color cornerColor);
+bool firstLayerCornerInPlace(Cube* pCube, Piece corner, Color color);
+void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color);
+void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color);
+
+// Middle layer functions
+void solveMidLayerEdges(Cube* pCube);
+void locateMidEdges(Cube* pCube, Piece faceEdges[], Color edgeColor);
+void swapTopEdgeRightEdge(Cube* pCube);
+void swapTopEdgeLeftEdge(Cube* pCube);
+
 // Matrix rotation
 void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
-
-// Cube printing
-void printCube(Cube* pCube);
 
 #endif /* Header_h */

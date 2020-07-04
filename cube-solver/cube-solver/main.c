@@ -282,6 +282,16 @@ void locateMidEdges(Cube* pCube, Piece faceEdges[], Color edgeColor);
 void swapTopEdgeRightEdge(Cube* pCube);
 void swapTopEdgeLeftEdge(Cube* pCube);
 
+// Top cross creation functions
+void createTopCross(Cube* pCube);
+void orientCubeForTopCross(Cube* pCube, Color faceColor);
+bool checkTopCross(Cube* pCube, Color faceColor);
+
+// Top corners placement function
+void orientTopCorners(Cube* pCube);
+void orientCubeForTopCorners(Cube* pCube, Color faceColor);
+bool checkTopCorners(Cube* pCube, Color faceColor);
+
 // Matrix rotation
 void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
@@ -302,6 +312,10 @@ int main(int argc, const char * argv[]) {
     solveFirstLayerCorners(&rubiks);
     printCube(&rubiks);
     solveMidLayerEdges(&rubiks);
+    printCube(&rubiks);
+    createTopCross(&rubiks);
+    printCube(&rubiks);
+    orientTopCorners(&rubiks);
     printCube(&rubiks);
     
     return 0;
@@ -2600,7 +2614,7 @@ void swapTopEdgeRightEdge(Cube* pCube)
  * Algorithm to swap the top front edge with the left front edge
  *
  * @param pCube
- * Pointer to a Cube structure
+ * Pointer to a Cube struct
  */
 void swapTopEdgeLeftEdge(Cube* pCube)
 {
@@ -2614,6 +2628,217 @@ void swapTopEdgeLeftEdge(Cube* pCube)
     rotateFrontFace(pCube, true);
 }
 
+// Top cross solving functions
+
+/**
+ * Creates a cross on the top face of the cube
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ */
+void createTopCross(Cube* pCube)
+{
+    Color faceColor = pCube->pieces[TOP_CENTER].z;
+    
+    // Loop while top cross is unsolved
+    while (!(checkTopCross(pCube, faceColor)))
+    {
+        // Orient top face
+        orientCubeForTopCross(pCube, faceColor);
+        
+        // Perform cross solving algorithm
+        rotateFrontFace(pCube, false);
+        rotateTopFace(pCube, false);
+        rotateRightFace(pCube, true);
+        rotateTopFace(pCube, true);
+        rotateRightFace(pCube, false);
+        rotateFrontFace(pCube, true);
+    }
+}
+
+/**
+ * Orients the cube to preform the algorithm to create the top layer cross
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ *
+ * @param faceColor
+ * The color of the top face
+ */
+void orientCubeForTopCross(Cube* pCube, Color faceColor)
+{
+    
+    // Orient cube to make reverse L or horizontal line
+    if (pCube->pieces[TOP_BACK_EDGE].z == faceColor)
+    {
+        // Orient to reverse L
+        if (pCube->pieces[TOP_RIGHT_EDGE].z == faceColor)
+        {
+            turnZ(pCube, true);
+        }
+        // Orient to horizontal line
+        else if (pCube->pieces[TOP_FRONT_EDGE].z == faceColor)
+        {
+            turnZ(pCube, true);
+        }
+    }
+    else if (pCube->pieces[TOP_LEFT_EDGE].z == faceColor)
+    {
+        // Orient to reverse L
+        if (pCube->pieces[TOP_FRONT_EDGE].z == faceColor)
+        {
+            turnZ(pCube, false);
+        }
+    }
+    else if (pCube->pieces[TOP_RIGHT_EDGE].z == faceColor)
+    {
+        // Orient to reverse L
+        if (pCube->pieces[TOP_FRONT_EDGE].z == faceColor)
+        {
+            turnZ(pCube, true);
+            turnZ(pCube, true);
+        }
+    }
+}
+
+/**
+ * Checks if the top cross has been placed
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ *
+ * @param faceColor
+ * The color of the top face
+ *
+ * @return
+ * True if top cross is solved
+ * False if top cross is not solved
+ */
+bool checkTopCross(Cube* pCube, Color faceColor)
+{
+    // Top cross placed
+    if (pCube->pieces[TOP_BACK_EDGE].z == faceColor && pCube->pieces[TOP_LEFT_EDGE].z == faceColor
+        && pCube->pieces[TOP_RIGHT_EDGE].z == faceColor && pCube->pieces[TOP_FRONT_EDGE].z == faceColor)
+    {
+        return true;
+    }
+    
+    // Top cross not placed
+    return false;
+}
+
+// Top corners solving functions
+
+/**
+ * Places the top corners of the cube so top oriented squares are the same color as the top face
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ */
+void orientTopCorners(Cube* pCube)
+{
+    Color faceColor = pCube->pieces[TOP_CENTER].z;
+    
+    // While the corners are not placed properly
+    while (!(checkTopCorners(pCube, faceColor)))
+    {
+        // Orient the cube correctly
+        orientCubeForTopCorners(pCube, faceColor);
+        printCube(pCube);
+        
+        // Algorithm to place corner pieces
+        rotateRightFace(pCube, true);
+        rotateTopFace(pCube, false);
+        rotateRightFace(pCube, false);
+        rotateTopFace(pCube, false);
+        rotateRightFace(pCube, true);
+        rotateTopFace(pCube, false);
+        rotateTopFace(pCube, false);
+        rotateRightFace(pCube, false);
+        printCube(pCube);
+    }
+}
+
+
+/**
+ * Orients the cube to place the top corners
+ *
+ * @param pCube
+ * Pointer to a cube struct
+ *
+ * @param faceColor
+ * The color of the top face
+ */
+void orientCubeForTopCorners(Cube* pCube, Color faceColor)
+{
+    int numCornersOnTop = 0;
+    
+    // Check how many top face corners are oriented correctly
+    if (pCube->pieces[TOP_LEFT_BACK_CORNER].z == faceColor)
+    {
+        ++numCornersOnTop;
+    }
+    if (pCube->pieces[TOP_LEFT_FRONT_CORNER].z == faceColor)
+    {
+        ++numCornersOnTop;
+    }
+    if (pCube->pieces[TOP_RIGHT_BACK_CORNER].z == faceColor)
+    {
+        ++numCornersOnTop;
+    }
+    if (pCube->pieces[TOP_RIGHT_FRONT_CORNER].z == faceColor)
+    {
+        ++numCornersOnTop;
+    }
+    
+    if (numCornersOnTop == 0)
+    {
+        while (pCube->pieces[TOP_LEFT_FRONT_CORNER].x != faceColor)
+        {
+            turnZ(pCube, true);
+        }
+    }
+    else if (numCornersOnTop == 1)
+    {
+        while (pCube->pieces[TOP_LEFT_FRONT_CORNER].z != faceColor)
+        {
+            turnZ(pCube, true);
+        }
+    }
+    else if (numCornersOnTop == 2)
+    {
+        while (pCube->pieces[TOP_LEFT_FRONT_CORNER].y != faceColor)
+        {
+            turnZ(pCube, true);
+        }
+    }
+}
+
+/**
+ * Checks if the top corners has been placed
+ *
+ * @param pCube
+ * Pointer to a Cube struct
+ *
+ * @param faceColor
+ * The color of the top face
+ *
+ * @return
+ * True if top cross is solved
+ * False if top cross is not solved
+ */
+bool checkTopCorners(Cube* pCube, Color faceColor)
+{
+    // Top corners placed
+    if (pCube->pieces[TOP_LEFT_BACK_CORNER].z == faceColor && pCube->pieces[TOP_LEFT_FRONT_CORNER].z == faceColor
+        && pCube->pieces[TOP_RIGHT_BACK_CORNER].z == faceColor && pCube->pieces[TOP_RIGHT_FRONT_CORNER].z == faceColor)
+    {
+        return true;
+    }
+    
+    // Top corners not placed
+    return false;
+}
 
 // Cube printing functions
 
@@ -2621,7 +2846,7 @@ void swapTopEdgeLeftEdge(Cube* pCube)
  * Prints a flattened Rubiks cube with numbers corresponding to each sqauare
  *
  * @param pCube
- * Pointer to a cube structure
+ * Pointer to a cube struct
  */
 void printCube(Cube* pCube)
 {
