@@ -276,6 +276,12 @@ bool firstLayerCornerInPlace(Cube* pCube, Piece corner, Color color);
 void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color);
 void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color);
 
+// Middle layer functions
+void solveMidLayerEdges(Cube* pCube);
+void locateMidEdges(Cube* pCube, Piece faceEdges[], Color edgeColor);
+void swapTopEdgeRightEdge(Cube* pCube);
+void swapTopEdgeLeftEdge(Cube* pCube);
+
 // Matrix rotation
 void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
@@ -294,6 +300,8 @@ int main(int argc, const char * argv[]) {
     solveFirstLayerCross(&rubiks);
     printCube(&rubiks);
     solveFirstLayerCorners(&rubiks);
+    printCube(&rubiks);
+    solveMidLayerEdges(&rubiks);
     printCube(&rubiks);
     
     return 0;
@@ -2398,6 +2406,214 @@ void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color)
         }
     }
 }
+
+// Middle layer functions
+
+/**
+ * Solves the middle layer edge pieces
+ *
+ * @param pCube
+ * Pointer to a cube structure
+ */
+void solveMidLayerEdges(Cube* pCube)
+{
+    Piece piece;
+    
+    // Rotate cube so solved layer is on bottom
+    turnY(pCube, true);
+    turnY(pCube, true);
+    printCube(pCube);
+    
+    // Get side face center colors
+    Color center1 = pCube->pieces[FRONT_CENTER].y;
+    Color center2 = pCube->pieces[LEFT_CENTER].x;
+    Color center3 = pCube->pieces[BACK_CENTER].y;
+    Color center4 = pCube->pieces[RIGHT_CENTER].x;
+   
+    
+    // Place center colors in an array
+    Color centerColors[NUM_CENTER - 2] = {center1, center2, center3, center4};
+    
+    // Create an edge piece array
+    Piece edgePieces[NUM_EDGES_ON_FACE];
+    
+    // Iterate for each side face
+    for (int i = 0; i < NUM_CENTER - 2; ++i)
+    {
+        locateMidEdges(pCube, edgePieces, centerColors[i]);
+        // Iterate through edge piece array
+        for (int j = 0; j < NUM_EDGES_ON_FACE; ++j)
+        {
+            piece = edgePieces[j];
+            // Check if an edge piece that belongs in the middle layer is on the top layer
+            if (piece.zCoord == 0 && piece.z != pCube->pieces[TOP_CENTER].z && piece.z != pCube->pieces[FRONT_CENTER].y)
+            {
+                // Rotate piece to front face
+                while ((pCube->pieces[TOP_FRONT_EDGE].y != centerColors[i]) || (pCube->pieces[TOP_FRONT_EDGE].z == pCube->pieces[TOP_CENTER].z))
+                {
+                    rotateTopFace(pCube, true);
+                }
+                // Reassign piece
+                piece = pCube->pieces[TOP_FRONT_EDGE];
+                
+                // Moving right
+                if (piece.z == pCube->pieces[RIGHT_CENTER].x)
+                {
+                    swapTopEdgeRightEdge(pCube);
+                }
+                // Moving left
+                else
+                {
+                    swapTopEdgeLeftEdge(pCube);
+                }
+            }
+            // Check if desired piece is in middle layer
+            else if (piece.zCoord == 1)
+            {
+                // Piece is on front face
+                if (piece.yCoord == 2)
+                {
+                    // Piece is on left side
+                    if (piece.xCoord == 0)
+                    {
+                        // Piece is not in correct position
+                        if (piece.y != pCube->pieces[FRONT_CENTER].y || piece.x != pCube->pieces[LEFT_CENTER].x)
+                        {
+                            swapTopEdgeLeftEdge(pCube);
+                        }
+                    }
+                    // Piece is on right side
+                    else
+                    {
+                        // Piece is not in correct postion
+                        if (piece.y != pCube->pieces[FRONT_CENTER].y || piece.x != pCube->pieces[RIGHT_CENTER].x)
+                        {
+                            swapTopEdgeRightEdge(pCube);
+                        }
+                    }
+                }
+                // Piece is on back face
+                else
+                {
+                    // Piece is on left side
+                    if (piece.xCoord == 0)
+                    {
+                        // Move piece to top layer
+                        turnZ(pCube, true);
+                        swapTopEdgeLeftEdge(pCube);
+                        turnZ(pCube, false);
+                    }
+                    // Piece is on right side
+                    else
+                    {
+                        // Move piece to top layer
+                        turnZ(pCube, false);
+                        swapTopEdgeRightEdge(pCube);
+                        turnZ(pCube, true);
+                    }
+                }
+            }
+            locateMidEdges(pCube, edgePieces, centerColors[i]);
+            printCube(pCube);
+        }
+        // Go to the next face
+        turnZ(pCube, true);
+    }
+}
+
+/**
+ * Locates the edge pieces that have a square with a specified color and puts pieces that are in the correct position in the middle layer at the begining of the array
+ *
+ * @param pCube
+ * Pointer to a cube structure
+ *
+ * @param faceEdges
+ * An array holding the edge pieces
+ *
+ * @param edgeColor
+ * The desired color
+ */
+void locateMidEdges(Cube* pCube, Piece faceEdges[], Color edgeColor)
+{
+    Piece piece;
+    int cntr = 0;
+    
+    // Iterate through all edge pieces
+    for (int i = 0; i < NUM_EDGE; ++i)
+    {
+        // Assign piece to an edge piece on cube
+        piece = pCube->pieces[EDGE_POS[i]];
+        
+        // Check if piece has desired color
+        if (piece.x == edgeColor || piece.y == edgeColor || piece.z == edgeColor)
+        {
+            // Add piece to array holding edge pieces containg desired color
+            faceEdges[cntr] = piece;
+            
+            // Advance counter
+            ++cntr;
+            
+            // Break loop if all edge pieces of desired color were found
+            if (cntr >= NUM_EDGES_ON_FACE)
+            {
+                break;
+            }
+        }
+    }
+    
+    for (int i = 0; i < NUM_EDGES_ON_FACE; ++i)
+    {
+        piece = faceEdges[i];
+        if (piece.y == pCube->pieces[FRONT_CENTER].y && (piece.x == pCube->pieces[RIGHT_CENTER].x || piece.x == pCube->pieces[LEFT_CENTER].x))
+        {
+            // Move all pieces preceding one index back
+            for (int j = i; j > 0; --j)
+            {
+                faceEdges[j] = faceEdges[j - 1];
+            }
+            // Move piece to the front of the array
+            faceEdges[0] = piece;
+        }
+    }
+}
+
+
+/**
+ * Algorithm to swap the top front edge with the front right edge
+ *
+ * @param pCube
+ * Pointer to a Cube structure
+ */
+void swapTopEdgeRightEdge(Cube* pCube)
+{
+    rotateTopFace(pCube, false);
+    rotateRightFace(pCube, true);
+    rotateTopFace(pCube, true);
+    rotateRightFace(pCube, false);
+    rotateTopFace(pCube, true);
+    rotateFrontFace(pCube, true);
+    rotateTopFace(pCube, false);
+    rotateFrontFace(pCube, false);
+}
+
+/**
+ * Algorithm to swap the top front edge with the left front edge
+ *
+ * @param pCube
+ * Pointer to a Cube structure
+ */
+void swapTopEdgeLeftEdge(Cube* pCube)
+{
+    rotateTopFace(pCube, true);
+    rotateLeftFace(pCube, true);
+    rotateTopFace(pCube, false);
+    rotateLeftFace(pCube, false);
+    rotateTopFace(pCube, false);
+    rotateFrontFace(pCube, false);
+    rotateTopFace(pCube, true);
+    rotateFrontFace(pCube, true);
+}
+
 
 // Cube printing functions
 
