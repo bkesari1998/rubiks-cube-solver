@@ -12,7 +12,276 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "rubiks.h"
+
+// Constants and definitions
+
+// Pieces in a Rubik's cube
+#define NUM_PIECES 26
+
+// Number of corner pieces in a Rubik's cube
+#define NUM_CORNER 8
+
+// Number of edge pieces in a Rubiks's cube
+#define NUM_EDGE 12
+
+// Number of center pieces in a Rubik's cube
+#define NUM_CENTER 6
+
+// Number of pieces on a face of a Rubik's cube
+#define NUM_PIECES_ON_FACE 9
+
+// Number of pieces on a row of a Rubik's cube
+#define NUM_PIECES_IN_ROW 3
+
+// Squares on a Rubik's cube
+#define NUM_SQUARES 54
+
+// Edges on one side of a Rubik's Cube
+#define NUM_EDGES_ON_FACE 4
+
+// Corners on one side of a Rubik's Cube
+#define NUM_CORNERS_ON_FACE 4
+
+// Indexes of pieces[] in a Cube struct that correspond to the top face
+#define TOP_LEFT_BACK_CORNER 0
+#define TOP_BACK_EDGE 1
+#define TOP_RIGHT_BACK_CORNER 2
+#define TOP_LEFT_EDGE 3
+#define TOP_CENTER 4
+#define TOP_RIGHT_EDGE 5
+#define TOP_LEFT_FRONT_CORNER 6
+#define TOP_FRONT_EDGE 7
+#define TOP_RIGHT_FRONT_CORNER 8
+
+// Indexes of pieces[] in a Cube struct that correspond to the back face
+#define BACK_LEFT_TOP_CORNER 0
+#define BACK_TOP_EDGE 1
+#define BACK_RIGHT_TOP_CORNER 2
+#define BACK_LEFT_EDGE 9
+#define BACK_CENTER 10
+#define BACK_RIGHT_EDGE 11
+#define BACK_LEFT_BOTTOM_CORNER 17
+#define BACK_BOTTOM_EDGE 18
+#define BACK_RIGHT_BOTTOM_CORNER 19
+
+// Indexes of pieces[] in a Cube struct that correspond to the left face
+#define LEFT_BACK_TOP_CORNER 0
+#define LEFT_TOP_EDGE 3
+#define LEFT_FRONT_TOP_CORNER 6
+#define LEFT_BACK_EDGE 9
+#define LEFT_CENTER 12
+#define LEFT_FRONT_EDGE 14
+#define LEFT_BACK_BOTTOM_CORNER 17
+#define LEFT_BOTTOM_EDGE 20
+#define LEFT_FRONT_BOTTOM_CORNER 23
+
+// Indexes of pieces[] in a Cube struct that correspond to the right face
+#define RIGHT_BACK_TOP_CORNER 2
+#define RIGHT_TOP_EDGE 5
+#define RIGHT_FRONT_TOP_CORNER 8
+#define RIGHT_BACK_EDGE 11
+#define RIGHT_CENTER 13
+#define RIGHT_FRONT_EDGE 16
+#define RIGHT_BACK_BOTTOM_CORNER 19
+#define RIGHT_BOTTOM_EDGE 22
+#define RIGHT_FRONT_BOTTOM_CORNER 25
+
+// Indexes of pieces[] in a Cube struct that correspond to the front face
+#define FRONT_LEFT_TOP_CORNER 6
+#define FRONT_TOP_EDGE 7
+#define FRONT_RIGHT_TOP_CORNER 8
+#define FRONT_LEFT_EDGE 14
+#define FRONT_CENTER 15
+#define FRONT_RIGHT_EDGE 16
+#define FRONT_LEFT_BOTTOM_CORNER 23
+#define FRONT_BOTTOM_EDGE 24
+#define FRONT_RIGHT_BOTTOM_CORNER 25
+
+// Indexes of pieces[] in a Cube struct that correspond to the bottom face
+#define BOTTOM_LEFT_BACK_CORNER 17
+#define BOTTOM_BACK_EDGE 18
+#define BOTTOM_RIGHT_BACK_CORNER 19
+#define BOTTOM_LEFT_EDGE 20
+#define BOTTOM_CENTER 21
+#define BOTTOM_RIGHT_EDGE 22
+#define BOTTOM_LEFT_FRONT_CORNER 23
+#define BOTTOM_FRONT_EDGE 24
+#define BOTTOM_RIGHT_FRONT_CORNER 25
+
+// Define DNE constant for arrays
+#define DNE -1
+
+// Create const arrays for indexes in user input string that correspond to the color of each side
+const int X_INDEXES[26] = { 9, DNE, 29, 10, DNE, 28, 11, DNE, 27, 12, DNE, 32, 13, 31, 14, DNE, 30,
+    15, DNE, 35, 16, DNE, 34, 17, DNE, 33 };
+
+const int Y_INDEXES[26] = { 38, 37, 36, DNE, DNE, DNE, 18, 19, 20, 41, 40, 39, DNE, DNE, 21, 22,
+    23, 44, 43, 42, DNE, DNE, DNE, 24, 25, 26};
+
+const int Z_INDEXES[26] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, DNE, DNE, DNE, DNE, DNE, DNE, DNE, DNE, 51,
+    52, 53, 48, 49, 50, 45, 46, 47};
+
+// Corner piece indexes in pieces[] of a Cube struct
+const int CORNER_POS[8] = { 0, 2, 6, 8, 17, 19, 23, 25 };
+
+// Corner piece coordinates
+const int CORNER_COORD[8][3] = { {0, 0, 0}, {2, 0, 0}, {0, 2, 0}, {2, 2, 0}, {0, 0, 2}, {2, 0, 0}, {0, 2, 2}, {2, 2, 2} };
+
+// Center piece indexes in pieces[] of a Cube struct
+const int CENTER_POS[6] = { 4, 10, 12, 13, 15, 21 };
+
+// Center piece coordinates
+const int CENTER_COORD[6][3] = { {1, 1, 0}, {1, 0, 1}, {0, 1, 1}, {2, 1, 1}, {1, 2, 1}, {1, 1, 2} };
+
+// Edge piece indexes in pieces[] of a Cube struct
+const int EDGE_POS[12] = { 1, 3, 5, 7, 9, 11, 14, 16, 18, 20, 22, 24 };
+
+// Edge piece coordinates
+const int EDGE_COORD[12][3] = {{1, 0, 0}, {0, 1, 0}, {2, 1, 0}, {1, 2, 0} };
+
+// Front face piece indexes in pieces[] of a Cube struct
+const int FRONT_POS[9] = { 6, 7, 8, 14, 15, 16, 23, 24, 25 };
+
+// Front face piece coordinates
+const int FRONT_COORD[9][3] = { {0, 2, 0}, {1, 2, 0}, {2, 2, 0}, {0, 2, 1}, {1, 2, 1}, {2, 2, 1}, {0, 2, 2}, {1, 2, 2}, {2, 2, 2} };
+
+// Back face piece indexes in pieces[] of a Cube struct
+const int BACK_POS[9] = { 0, 1, 2, 9, 10, 11, 17, 18, 19 };
+
+// Back face piece coordinates
+const int BACK_COORD[9][3] = { {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {0, 0, 1}, {1, 0, 1}, {2, 0, 1}, {0, 0, 2}, {1, 0, 2}, {2, 0, 2} };
+
+// Right face piece indexes in pieces[] of a Cube struct
+const int RIGHT_POS[9] = { 2, 5, 8, 11, 13, 16, 19, 22, 25 };
+
+// Right face piece coordinates
+const int RIGHT_COORD[9][3] = { {2, 0, 0}, {2, 1, 0}, {2, 2, 0}, {2, 0, 1}, {2, 0, 1}, {2, 2, 1}, {2, 0, 2}, {2, 1, 2}, {2, 2, 2} };
+
+// Left face piece indexes in pieces[] of a Cube struct
+const int LEFT_POS[9] = { 0, 3, 6, 9, 12, 14, 17, 20, 23 };
+
+// Left face piece coordinates
+const int LEFT_COORD[9][3] = { {0, 0, 0}, {0, 1, 0}, {0, 2, 0}, {0, 0, 1}, {0, 0, 1}, {0, 2, 1}, {0, 0, 2}, {0, 1, 2}, {0, 2, 2} };
+
+// Top face piece indexes in pieces[] of a Cube struct
+const int TOP_POS[9] = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+
+// Top face piece coordinates
+const int TOP_COORD[9][3] = { {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {0, 1, 0}, {1, 1, 0}, {2, 1, 0}, {0, 2, 0}, {1, 2, 0}, {2, 2, 0} };
+
+// Bottom face piece indexes in pieces[] of a Cube struct
+const int BOTTOM_POS[9] = { 17, 18, 19, 20, 21, 22, 23, 24, 25 };
+
+// Bottom face piece coordinates
+const int BOTTOM_COORD[9][3] = { {0, 0, 2}, {1, 0, 2}, {2, 0, 2}, {0, 1, 2}, {1, 1, 2}, {2, 1, 2}, {0, 2, 2}, {1, 2, 2}, {2, 2, 2} };
+
+// Middle Layer perpendicular to x piece indexes in pieces[] of a Cube struct
+const int X_MID[9] = { 1, 4, 7, 10, DNE, 15, 18, 21, 24 };
+
+// Middle Layer perpendicular to y piece indexes in pieces[] of a Cube struct
+const int Y_MID[9] = { 3, 4, 5, 12, DNE, 13, 20, 21, 22 };
+
+// Middle Layer perpendicular to z piece indexes in pieces[] of a Cube struct
+const int Z_MID[9] = { 9, 10, 11, 12, DNE, 13, 14, 15, 16 };
+
+// Enumerations and structures
+
+// Define possible colors on a Rubik's cube
+typedef enum colors {
+    WHITE,
+    YELLOW,
+    ORANGE,
+    RED,
+    BLUE,
+    GREEN,
+    UNDEFINED
+} Color;
+
+// Define possible piece types on a Rubik's cube
+typedef enum pieceTypes {
+    CENTER,
+    EDGE,
+    CORNER,
+    NONE
+} PieceType;
+
+// Define possible faces of a Rubik's cube
+typedef enum faces {
+    FRONT,
+    BACK,
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
+} Face;
+
+// Define piece on a Rubik's cube
+typedef struct piece {
+    PieceType pieceType;
+    int pieceNum;
+    int xCoord;
+    int yCoord;
+    int zCoord;
+    Color x;
+    Color y;
+    Color z;
+} Piece;
+
+// Define a Rubik's cube
+typedef struct cubes {
+    Piece pieces[NUM_PIECES];
+} Cube;
+
+// Function prototypes
+
+// User input fuctions
+void getColors(char* colorArr);
+bool isColor(char input);
+
+// Cube creation and color checking functions
+void createCube(Cube* pCube, char* colors);
+PieceType checkPieceType(int index);
+void assignPieceColors(Color* pXCol, Color* pYCol, Color* pZCol, int pieceNum, char* colors);
+void assignPieceCoords(int* pX, int* pY, int* pZ, int pieceNum);
+Color abbreiveToColor(char colorAbreive);
+Color getOpposite(Color squareColor);
+
+// Cube manipulation
+void rotateFrontFace(Cube* pCube, bool isCntr);
+void rotateBackFace(Cube* pCube, bool isCntr);
+void rotateLeftFace(Cube* pCube, bool isCntr);
+void rotateRightFace(Cube* pCube, bool isCntr);
+void rotateTopFace(Cube* pCube, bool isCntr);
+void rotateBottomFace(Cube* pCube, bool isCntr);
+void rotateMidX(Cube* pCube, bool isCntr);
+void rotateMidY(Cube* pCube, bool isCntr);
+void rotateMidZ(Cube* pCube, bool isCntr);
+void turnX(Cube* pCube, bool isCntr);
+void turnY(Cube* pCube, bool isCntr);
+void turnZ(Cube* pCube, bool isCntr);
+
+// First layer cross functions
+void solveFirstLayerCross(Cube* pCube);
+void locateFirstLayerEdges(Cube* pCube, Piece edgePieces[], Color edgeColor);
+bool edgeInDaisy(Cube* pCube, Piece edge, Color oppColor);
+void daisyTop(Cube* pCube, Piece piece, Color oppColor);
+void daisyMid(Cube* pCube, Piece piece, Color oppColor);
+void daisyBottom(Cube* pCube, Piece piece, Color oppColor);
+void daisyToCross(Cube* pCube, Color oppColor);
+
+// First layer corners functions
+void solveFirstLayerCorners(Cube* pCube);
+void locateFirstLayerCorners(Cube* pCube, Piece faceCorners[], Color cornerColor);
+bool firstLayerCornerInPlace(Cube* pCube, Piece corner, Color color);
+void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color);
+void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color);
+
+// Matrix rotation
+void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
+void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
+
+// Cube printing
+void printCube(Cube* pCube);
 
 int main(int argc, const char * argv[]) {
     char colorArr[NUM_SQUARES];
@@ -23,6 +292,8 @@ int main(int argc, const char * argv[]) {
     createCube(&rubiks, colorArr);
     printCube(&rubiks);
     solveFirstLayerCross(&rubiks);
+    printCube(&rubiks);
+    solveFirstLayerCorners(&rubiks);
     printCube(&rubiks);
     
     return 0;
@@ -1164,6 +1435,7 @@ void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW])
 
 // Cube solving functions
 
+// First Layer Cross
 /**
  * Solves the cross on the first layer of the cube
  *
@@ -1692,7 +1964,440 @@ void daisyToCross(Cube* pCube, Color oppColor)
     }
 }
 
+// First layer corners
+void solveFirstLayerCorners(Cube* pCube)
+{
+    Piece piece;
 
+    // Get center piece color of bottom face
+    Color color = pCube->pieces[BOTTOM_CENTER].z;
+    
+    // Re-orient cube so bottom is on top
+    turnY(pCube, true);
+    turnY(pCube, true);
+
+    // Create an array holding corner pieces with desired color
+    Piece cornerPieces[NUM_CORNERS_ON_FACE];
+    locateFirstLayerCorners(pCube, cornerPieces, color);
+    
+    // Loop through corner piece array
+    for (int i = 0; i < NUM_CORNERS_ON_FACE; ++i)
+    {
+    
+        piece = cornerPieces[i];
+        
+        // If piece is not in the correct positon
+        if(!(firstLayerCornerInPlace(pCube, piece, color)))
+        {
+            // Piece on top layer and oriented incorrectly
+            if (piece.zCoord == 0)
+            {
+                // Piece is on left face
+                if (piece.xCoord == 0)
+                {
+                    // Piece is on back face, rotate to front face
+                    if (piece.yCoord == 0)
+                    {
+                        turnZ(pCube, true);
+                    }
+                    // Move piece to bottom right front corner
+                    rotateLeftFace(pCube, false);
+                    rotateBottomFace(pCube, true);
+                    rotateLeftFace(pCube, true);
+                    
+                    // Reassign piece with piece in bottom right front corner
+                    piece = pCube->pieces[BOTTOM_RIGHT_FRONT_CORNER];
+                }
+                // Piece is on right face
+                else
+                {
+                    // Piece is on back face, rotate to front face
+                    if (piece.yCoord == 0)
+                    {
+                        turnZ(pCube, false);
+                    }
+                    // Move piece to bottom left front corner
+                    rotateRightFace(pCube, false);
+                    rotateBottomFace(pCube, false);
+                    rotateRightFace(pCube, true);
+                    
+                    // Reassign piece with piece in bottom left front corner
+                    piece = pCube->pieces[BOTTOM_LEFT_FRONT_CORNER];
+                }
+            }
+            
+            // Piece is on left face
+            if (piece.xCoord == 0)
+            {
+                // Place piece in correct position
+                putBottomLeftCornerOnTop(pCube, piece, color);
+            }
+            // Piece is on right face
+            else
+            {
+                // Place piece in correct position
+                putBottomRightCornerOnTop(pCube, piece, color);
+            }
+        }
+        if (i < NUM_CORNERS_ON_FACE - 1)
+        {
+            locateFirstLayerCorners(pCube, cornerPieces, color);
+        }
+
+    }
+}
+
+/**
+ * Locates the corner pieces that have a square with a specified color
+ *
+ * @param pCube
+ *  A pointer to a Cube structure
+ *
+ * @param faceCorners
+ *  A pointer to the first element of an array holding the edge pieces
+ *
+ * @param cornerColor
+ *  The desired color
+ */
+void locateFirstLayerCorners(Cube* pCube, Piece faceCorners[], Color cornerColor)
+{
+    Piece * piece;
+    int cntr = 0;
+    
+    // Iterate through all corner pieces
+    for (int i = 0; i < NUM_CORNER; ++i)
+    {
+        // Assign piece to a corner piece on cube
+        piece = &(pCube->pieces[CORNER_POS[i]]);
+        
+        // Check if piece has desired color
+        if (piece->x == cornerColor || piece->y == cornerColor || piece->z == cornerColor)
+        {
+            faceCorners[cntr] = *piece;
+            ++cntr;
+            
+            if (cntr >= NUM_CORNERS_ON_FACE)
+            {
+                break;
+            }
+        }
+    }
+    // Place corners that are in correct position at front of the array
+    for (int i = 0; i < NUM_CORNERS_ON_FACE; ++i)
+    {
+        Piece temp = faceCorners[i];
+        // Check if piece is in correct position
+        if (firstLayerCornerInPlace(pCube, temp, cornerColor))
+        {
+            // Move all pieces preceding one index back
+            for (int j = i; j > 0; --j)
+            {
+                faceCorners[j] = faceCorners[j - 1];
+            }
+            // Move piece to the front of the array
+            faceCorners[0] = temp;
+        }
+    }
+}
+
+/**
+ * Checks if a bottom corner position is occupied by the correct piece and oriented correctly
+ *
+ * @param pCube
+ * Pointer to a Cube structure
+ *
+ * @param corner
+ * The corner piece that is being checked
+ *
+ * @param color
+ * The center piece color of the bottom face
+ *
+ * @return
+ * True if the piece is correctly oriented in the correct corner position of the bottom layer
+ * False if it is not in the corect positon or orientation
+ */
+bool firstLayerCornerInPlace(Cube* pCube, Piece corner, Color color)
+{
+    // Piece is in top layer
+    if (corner.zCoord == 0)
+    {
+        // Correct color is facing up
+        if (corner.z == color)
+        {
+            // Piece is on back face
+            if (corner.yCoord == 0)
+            {
+                // Piece is on left face
+                if (corner.xCoord == 0)
+                {
+                    // Check that x color is correct
+                    if (corner.x == pCube->pieces[LEFT_CENTER].x)
+                    {
+                        // Check that y color is correct
+                        if (corner.y == pCube->pieces[BACK_CENTER].y)
+                        {
+                            // Piece is in correct position
+                            return true;
+                        }
+                    }
+                }
+                // Piece is on right face
+                else
+                {
+                   // Check that x color is correct
+                    if (corner.x == pCube->pieces[RIGHT_CENTER].x)
+                    {
+                        // Check that y color is correct
+                        if (corner.y == pCube->pieces[BACK_CENTER].y)
+                        {
+                            // Piece is in correct position
+                            return true;
+                        }
+                    }
+                }
+            }
+            // Piece is on front face
+            else
+            {
+                // Piece is on left face
+                if (corner.xCoord == 0)
+                {
+                    // Check that x color is correct
+                    if (corner.x == pCube->pieces[LEFT_CENTER].x)
+                    {
+                        // Check that y color is correct
+                        if (corner.y == pCube->pieces[FRONT_CENTER].y)
+                        {
+                            // Piece is in correct position
+                            return true;
+                        }
+                    }
+                }
+                // Piece is on right face
+                else
+                {
+                   // Check that x color is correct
+                    if (corner.x == pCube->pieces[RIGHT_CENTER].x)
+                    {
+                        // Check that y color is correct
+                        if (corner.y == pCube->pieces[FRONT_CENTER].y)
+                        {
+                            // Piece is in correct position
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Piece is not in correct position
+    return false;
+}
+
+/**
+ * Places bottom left corner piece in the top left corner position
+ *
+ * @param pCube
+ * Pointer to a Cube structure
+ *
+ * @param piece
+ * The piece to be moved
+ *
+ * @param color
+ * The color of the center piece of top face
+ */
+void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color)
+{
+    // Piece is on back face
+    if (piece.yCoord == 0)
+    {
+        // Turn cube to put piece on front face
+        turnZ(pCube, true);
+        
+        // Reassign piece
+        piece = pCube->pieces[FRONT_LEFT_BOTTOM_CORNER];
+        
+        // Rotate top until the corner is in between two matching center tiles
+        while ((piece.z == color && (piece.y != pCube->pieces[LEFT_CENTER].x))
+               || (piece.y == color && (piece.x != pCube->pieces[LEFT_CENTER].x))
+               || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
+        {
+            rotateBottomFace(pCube, true);
+            turnZ(pCube, false);
+            
+        }
+        // Desired color is facing down, rieorient so desired color facing front
+        if (piece.z == color)
+        {
+            rotateFrontFace(pCube, true);
+            rotateBottomFace(pCube, true);
+            rotateFrontFace(pCube, false);
+            rotateBottomFace(pCube, false);
+            rotateBottomFace(pCube, false);
+        }
+        
+        // Top center color is facing left
+        if (piece.x == color)
+        {
+            // Turn so piece is faceing front
+            turnZ(pCube, true);
+            piece = pCube->pieces[FRONT_RIGHT_BOTTOM_CORNER];
+            
+            putBottomRightCornerOnTop(pCube, piece, color);
+        }
+        // Top center color is facing front
+        else
+        {
+            // Put piece in place
+            rotateBottomFace(pCube, true);
+            rotateLeftFace(pCube, false);
+            rotateBottomFace(pCube, false);
+            rotateLeftFace(pCube, true);
+        }
+    }
+    // Piece is on front face
+    else
+    {
+        // Rotate top until the corner is in between two matching center tiles
+        while ((piece.z == color && (piece.y != pCube->pieces[LEFT_CENTER].x))
+               || (piece.y == color && (piece.x != pCube->pieces[LEFT_CENTER].x))
+               || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
+        {
+            rotateBottomFace(pCube, true);
+            turnZ(pCube, false);
+        }
+        // Desired color is facing down, rieorient so desired color facing front
+        if (piece.z == color)
+        {
+            rotateFrontFace(pCube, true);
+            rotateBottomFace(pCube, true);
+            rotateFrontFace(pCube, false);
+            rotateBottomFace(pCube, false);
+            rotateBottomFace(pCube, false);
+        }
+        
+        // Top center color is facing left
+        if (piece.x == color)
+        {
+            // Turn so piece is faceing front
+            turnZ(pCube, true);
+            piece = pCube->pieces[FRONT_RIGHT_BOTTOM_CORNER];
+            
+            putBottomRightCornerOnTop(pCube, piece, color);
+        }
+        // Top center color is facing front
+        else
+        {
+            // Put piece in place
+            rotateBottomFace(pCube, true);
+            rotateLeftFace(pCube, false);
+            rotateBottomFace(pCube, false);
+            rotateLeftFace(pCube, true);
+        }
+    }
+}
+
+/**
+ * Places bottom right corner piece in top right corner position
+ *
+ * @param pCube
+ * Pointer to a Cube structure
+ *
+ * @param piece
+ * The piece to be moved
+ *
+ * @param color
+ * The color of the center piece of the top face
+ */
+void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color)
+{
+    // Piece is on back face
+    if (piece.yCoord == 0)
+    {
+        // Turn cube to put piece on front face
+        turnZ(pCube, false);
+        
+        // Reassign piece
+        piece = pCube->pieces[FRONT_RIGHT_BOTTOM_CORNER];
+        
+        // Rotate top until the corner is in between two matching center tiles
+        while ((piece.z == color && (piece.y != pCube->pieces[RIGHT_CENTER].x))
+               || (piece.y == color && (piece.x != pCube->pieces[RIGHT_CENTER].x))
+               || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
+        {
+            rotateBottomFace(pCube, true);
+            turnZ(pCube, false);
+        }
+        // Desired color is facing down, rieorient so desired color facing front
+        if (piece.z == color)
+        {
+            rotateFrontFace(pCube, false);
+            rotateBottomFace(pCube, false);
+            rotateFrontFace(pCube, true);
+            rotateBottomFace(pCube, true);
+            rotateBottomFace(pCube, true);
+        }
+        // Top center color is facing right
+        if (piece.x == color)
+        {
+            // Turn so piece is faceing front
+            turnZ(pCube, false);
+            piece = pCube->pieces[FRONT_LEFT_BOTTOM_CORNER];
+            
+            putBottomLeftCornerOnTop(pCube, piece, color);
+        }
+        // Top center color facing front
+        else
+        {
+            // Put piece in place
+            rotateBottomFace(pCube, false);
+            rotateRightFace(pCube, false);
+            rotateBottomFace(pCube, true);
+            rotateRightFace(pCube, true);
+        }
+    }
+    // Piece is on front face
+    else
+    {
+        // Rotate bottom until the corner is in between two matching center tiles
+        while ((piece.z == color && (piece.y != pCube->pieces[RIGHT_CENTER].x))
+               || (piece.y == color && (piece.x != pCube->pieces[RIGHT_CENTER].x))
+               || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
+        {
+            rotateBottomFace(pCube, true);
+            turnZ(pCube, false);
+        }
+        // Desired color is facing down, rieorient so desired color facing front
+        if (piece.z == color)
+        {
+            rotateFrontFace(pCube, false);
+            rotateBottomFace(pCube, false);
+            rotateFrontFace(pCube, true);
+            rotateBottomFace(pCube, true);
+            rotateBottomFace(pCube, true);
+        }
+        
+        // Top center color is facing right
+        if (piece.x == color)
+        {
+            // Turn so piece is faceing front
+            turnZ(pCube, false);
+            piece = pCube->pieces[FRONT_LEFT_BOTTOM_CORNER];
+            
+            putBottomLeftCornerOnTop(pCube, piece, color);
+        }
+        // Top center color is facing front
+        else
+        {
+            // Put piece in place
+            rotateBottomFace(pCube, false);
+            rotateRightFace(pCube, false);
+            rotateBottomFace(pCube, true);
+            rotateRightFace(pCube, true);
+        }
+    }
+}
 
 // Cube printing functions
 
