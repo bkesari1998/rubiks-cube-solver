@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:cube-solver.xcodeproj">
+      location = "group:/Users/bharatkesari/Documents/Rubiks-Cube-Solver/rubiks-cube-solver/cube-solver/cube-solver/instructions.txt">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

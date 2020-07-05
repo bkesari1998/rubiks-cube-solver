@@ -6,8 +6,6 @@
 //  Copyright © 2020 Bharat Kesari. All rights reserved.
 //
 
-// Solved Cube: wwwwwwwwwooooooooogggggggggrrrrrrrrrbbbbbbbbbyyyyyyyyy
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -16,17 +14,19 @@
 int main(int argc, const char * argv[]) {
     char colorArr[NUM_SQUARES];
     Cube rubiks;
+
     
     // Get user input
     getColors(colorArr);
     createCube(&rubiks, colorArr);
     printCube(&rubiks);
     
+
     // Solve cube
-  //  solveFirstLayerCross(&rubiks);
-    //printCube(&rubiks);
-    //solveFirstLayerCorners(&rubiks);
-   // printCube(&rubiks);
+    solveFirstLayerCross(&rubiks);
+    printCube(&rubiks);
+    solveFirstLayerCorners(&rubiks);
+    printCube(&rubiks);
     solveMidLayerEdges(&rubiks);
     printCube(&rubiks);
     createTopCross(&rubiks);
@@ -37,7 +37,7 @@ int main(int argc, const char * argv[]) {
     printCube(&rubiks);
     solveTopEdges(&rubiks);
     printCube(&rubiks);
-    
+
     return 0;
 }
 
@@ -2191,9 +2191,8 @@ void solveMidLayerEdges(Cube* pCube)
     Piece piece;
     
     // Rotate cube so solved layer is on bottom
-    //turnY(pCube, true);
-    //turnY(pCube, true);
-    //printCube(pCube);
+    turnY(pCube, true);
+    turnY(pCube, true);
     
     // Get side face center colors
     Color center1 = pCube->pieces[FRONT_CENTER].y;
@@ -2371,7 +2370,6 @@ void solveMidLayerEdges(Cube* pCube)
                     }
                 }
                 locateMidEdges(pCube, edgePieces, centerColors[i]);
-                printCube(pCube);
             }
         }
         // Go to the next face
@@ -2750,7 +2748,15 @@ void solveTopCorners(Cube* pCube)
  */
 void orientCubeForTopCornerSwap(Cube* pCube)
 {
-    for (int i = 0; i < 4; ++i)
+    while ((pCube->pieces[FRONT_RIGHT_TOP_CORNER].x != pCube->pieces[RIGHT_CENTER].x || pCube->pieces[FRONT_RIGHT_TOP_CORNER].y != pCube->pieces[FRONT_CENTER].y)
+           && (pCube->pieces[FRONT_LEFT_TOP_CORNER].x != pCube->pieces[LEFT_CENTER].x || pCube->pieces[FRONT_LEFT_TOP_CORNER].y != pCube->pieces[FRONT_CENTER].y)
+           && (pCube->pieces[BACK_RIGHT_TOP_CORNER].x != pCube->pieces[RIGHT_CENTER].x || pCube->pieces[BACK_RIGHT_TOP_CORNER].y != pCube->pieces[BACK_CENTER].y)
+           && (pCube->pieces[BACK_LEFT_TOP_CORNER].x != pCube->pieces[LEFT_CENTER].x || pCube->pieces[BACK_LEFT_TOP_CORNER].y != pCube->pieces[BACK_CENTER].y))
+    {
+        rotateTopFace(pCube, true);
+    }
+    
+    for (int i = 0; i < NUM_CENTER - 2; ++i)
     {
         if ((pCube->pieces[TOP_RIGHT_FRONT_CORNER].x == pCube->pieces[RIGHT_CENTER].x)
             && (pCube->pieces[TOP_RIGHT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y)
@@ -2762,12 +2768,6 @@ void orientCubeForTopCornerSwap(Cube* pCube)
             return;
         }
         turnZ(pCube, true);
-    }
-    
-    while ((pCube->pieces[TOP_RIGHT_FRONT_CORNER].x != pCube->pieces[RIGHT_CENTER].x)
-    || (pCube->pieces[TOP_RIGHT_FRONT_CORNER].y != pCube->pieces[FRONT_CENTER].y))
-    {
-        rotateTopFace(pCube, true);
     }
 }
 
@@ -2807,6 +2807,7 @@ void solveTopEdges(Cube* pCube)
         
         // Places a solved face in the back position
         orientCubeForTopEdgeSolve(pCube);
+        printCube(pCube);
         
         // Algorithm to rotate 3 edge pieces
         rotateFrontFace(pCube, false);
@@ -2821,6 +2822,7 @@ void solveTopEdges(Cube* pCube)
         rotateTopFace(pCube, false);
         rotateFrontFace(pCube, false);
         rotateFrontFace(pCube, false);
+        printCube(pCube);
     }
 }
 
@@ -2833,12 +2835,12 @@ void solveTopEdges(Cube* pCube)
 void orientCubeForTopEdgeSolve(Cube* pCube)
 {
     // Iterate until the function returns
-    for(;;)
+    for(int i = 0; i < NUM_CENTER - 2; ++i)
     {
-        for (int i = 0; i < NUM_PIECES_IN_ROW; ++i)
+        for (int j = 0; j < NUM_PIECES_IN_ROW; ++j)
         {
             // Turn the cube 90 degrees if current face isn't solved
-            if (pCube->pieces[BACK_POS[i]].y != pCube->pieces[BACK_CENTER].y)
+            if (pCube->pieces[BACK_POS[j]].y != pCube->pieces[BACK_CENTER].y)
             {
                 turnZ(pCube, true);
                 break;
