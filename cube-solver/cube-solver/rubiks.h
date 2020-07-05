@@ -1,13 +1,13 @@
 //
-//  rubiks.h
+//  Header.h
 //  cube-solver
 //
 //  Created by Bharat Kesari on 7/3/20.
 //  Copyright © 2020 Bharat Kesari. All rights reserved.
 //
 
-#ifndef rubiks_h
-#define rubiks_h
+#ifndef Header_h
+#define Header_h
 
 // Constants and definitions
 
@@ -228,4 +228,82 @@ typedef struct cubes {
     Piece pieces[NUM_PIECES];
 } Cube;
 
-#endif /* rubiks_h */
+// Function prototypes
+
+// User input fuctions
+void getColors(char* colorArr);
+bool isColor(char input);
+
+// Cube creation and color checking functions
+void createCube(Cube* pCube, char* colors);
+PieceType checkPieceType(int index);
+void assignPieceColors(Color* pXCol, Color* pYCol, Color* pZCol, int pieceNum, char* colors);
+void assignPieceCoords(int* pX, int* pY, int* pZ, int pieceNum);
+Color abbreiveToColor(char colorAbreive);
+Color getOpposite(Color squareColor);
+
+// Cube manipulation
+void rotateFrontFace(Cube* pCube, bool isCntr);
+void rotateBackFace(Cube* pCube, bool isCntr);
+void rotateLeftFace(Cube* pCube, bool isCntr);
+void rotateRightFace(Cube* pCube, bool isCntr);
+void rotateTopFace(Cube* pCube, bool isCntr);
+void rotateBottomFace(Cube* pCube, bool isCntr);
+void rotateMidX(Cube* pCube, bool isCntr);
+void rotateMidY(Cube* pCube, bool isCntr);
+void rotateMidZ(Cube* pCube, bool isCntr);
+void turnX(Cube* pCube, bool isCntr);
+void turnY(Cube* pCube, bool isCntr);
+void turnZ(Cube* pCube, bool isCntr);
+
+// First layer cross functions
+void solveFirstLayerCross(Cube* pCube);
+void locateFirstLayerEdges(Cube* pCube, Piece edgePieces[], Color edgeColor);
+bool edgeInDaisy(Cube* pCube, Piece edge, Color oppColor);
+void daisyTop(Cube* pCube, Piece piece, Color oppColor);
+void daisyMid(Cube* pCube, Piece piece, Color oppColor);
+void daisyBottom(Cube* pCube, Piece piece, Color oppColor);
+void daisyToCross(Cube* pCube, Color oppColor);
+
+// First layer corners functions
+void solveFirstLayerCorners(Cube* pCube);
+void locateFirstLayerCorners(Cube* pCube, Piece faceCorners[], Color cornerColor);
+bool firstLayerCornerInPlace(Cube* pCube, Piece corner, Color color);
+void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color);
+void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color);
+
+// Middle layer functions
+void solveMidLayerEdges(Cube* pCube);
+void locateMidEdges(Cube* pCube, Piece faceEdges[], Color edgeColor);
+bool faceMidEdgesInPlace(Cube* pCube, Color faceColor);
+void swapTopEdgeRightEdge(Cube* pCube);
+void swapTopEdgeLeftEdge(Cube* pCube);
+
+// Top cross creation functions
+void createTopCross(Cube* pCube);
+void orientCubeForTopCross(Cube* pCube, Color faceColor);
+bool checkTopCross(Cube* pCube, Color faceColor);
+
+// Top corners placement function
+void orientTopCorners(Cube* pCube);
+void orientCubeForTopCorners(Cube* pCube, Color faceColor);
+bool checkTopCorners(Cube* pCube, Color faceColor);
+
+// Top corner solving functions
+void solveTopCorners(Cube* pCube);
+void orientCubeForTopCornerSwap(Cube* pCube);
+bool checkTopCornersSolved(Cube* pCube);
+
+// Solve top edges
+void solveTopEdges(Cube* pCube);
+void orientCubeForTopEdgeSolve(Cube* pCube);
+bool checkTopEdgeSolved(Cube* pCube);
+
+// Matrix rotation
+void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
+void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
+
+// Cube printing
+void printCube(Cube* pCube);
+
+#endif /* Header_h */
