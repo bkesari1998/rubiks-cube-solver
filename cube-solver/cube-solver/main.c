@@ -11,10 +11,21 @@
 #include <stdbool.h>
 #include "rubiks.h"
 
+FILE* fp_instruct = NULL;
+
 int main(int argc, const char * argv[]) {
     char colorArr[NUM_SQUARES];
     Cube rubiks;
-
+    
+    // Open instruction file for writing
+    fp_instruct = fopen("/Users/bharatkesari/Documents/Rubiks-Cube-Solver/rubiks-cube-solver/cube-solver/cube-solver/instructions.txt", "w");
+    
+    // Check that file opened correctly, exit function if file opened incorrectly
+    if (fp_instruct == NULL)
+    {
+        fprintf(stderr, "Could not open 'instructions.txt'.\n");
+        exit(1);
+    }
     
     // Get user input
     getColors(colorArr);
@@ -38,6 +49,9 @@ int main(int argc, const char * argv[]) {
     solveTopEdges(&rubiks);
     printCube(&rubiks);
 
+    // Close instuction file
+    fclose(fp_instruct);
+    
     return 0;
 }
 
@@ -453,15 +467,18 @@ Color getOpposite(Color squareColor)
 // Cube manipulation functions
 
 /**
- * Rotates the front face of the cube 90 degrees
+ * Rotates the front face of the cube 90 degrees and writes the instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
  *
  * @param isCntr
  * Specifies the direction of the rotation
+ *
+ * @param outputInstruct
+ * Writes instruction to file if true
  */
-void rotateFrontFace(Cube* pCube, bool isCntr)
+void rotateFrontFace(Cube* pCube, bool isCntr, bool outputInstruct)
 {
     Piece face[3][3];
     Color temp;
@@ -515,18 +532,33 @@ void rotateFrontFace(Cube* pCube, bool isCntr)
         pCube->pieces[FRONT_POS[i]].z = temp;
         
     }
+    
+    // Output instruction if indicated
+    if (outputInstruct)
+    {
+        // Output CC instruction
+        if (isCntr)
+        {
+            fprintf(fp_instruct, "F' ");
+        }
+        // Output Clck instruction
+        fprintf(fp_instruct, "F ");
+    }
 }
 
 /**
- * Rotates the front face of the cube 90 degrees
+ * Rotates the front face of the cube 90 degrees and writes the instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
  *
  * @param isCntr
  * Specifies the direction of the rotation
+ *
+ * @param outputInstruct
+ * Writes instruction to file if true
  */
-void rotateBackFace(Cube* pCube, bool isCntr)
+void rotateBackFace(Cube* pCube, bool isCntr, bool outputInstruct)
 {
     Piece face[3][3];
     Color temp;
@@ -579,18 +611,33 @@ void rotateBackFace(Cube* pCube, bool isCntr)
         pCube->pieces[BACK_POS[i]].x = pCube->pieces[BACK_POS[i]].z;
         pCube->pieces[BACK_POS[i]].z = temp;
     }
+    
+    // Output instruction if indicated
+    if (outputInstruct)
+    {
+        // Output CC instruction
+        if (isCntr)
+        {
+            fprintf(fp_instruct, "B ");
+        }
+        // Output Clck instruction
+        fprintf(fp_instruct, "B' ");
+    }
 }
 
 /**
- * Rotates the left face of the cube 90 degrees
+ * Rotates the left face of the cube 90 degrees and writes the instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
  *
  * @param isCntr
  * Specifies the direction of the rotation
+ *
+ * @param outputInstruct
+ * Writes instruction to file if true
  */
-void rotateLeftFace(Cube* pCube, bool isCntr)
+void rotateLeftFace(Cube* pCube, bool isCntr, bool outputInstruct)
 {
     Piece face[3][3];
     Color temp;
@@ -643,18 +690,33 @@ void rotateLeftFace(Cube* pCube, bool isCntr)
         pCube->pieces[LEFT_POS[i]].y = pCube->pieces[LEFT_POS[i]].z;
         pCube->pieces[LEFT_POS[i]].z = temp;
     }
+    
+    // Output instruction if indicated
+    if (outputInstruct)
+    {
+        // Output CC instruction
+        if (isCntr)
+        {
+            fprintf(fp_instruct, "L' ");
+        }
+        // Output Clck instruction
+        fprintf(fp_instruct, "L ");
+    }
 }
 
 /**
- * Rotates the right face of the cube 90 degrees
+ * Rotates the right face of the cube 90 degrees and writes the instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
  *
  * @param isCntr
  * Specifies the direction of the rotation
+ *
+ * @param outputInstruct
+ * Writes instruction to file if true
  */
-void rotateRightFace(Cube* pCube, bool isCntr)
+void rotateRightFace(Cube* pCube, bool isCntr, bool outputInstruct)
 {
     Piece face[3][3];
     Color temp;
@@ -707,18 +769,33 @@ void rotateRightFace(Cube* pCube, bool isCntr)
         pCube->pieces[RIGHT_POS[i]].y = pCube->pieces[RIGHT_POS[i]].z;
         pCube->pieces[RIGHT_POS[i]].z = temp;
     }
+    
+    // Output instruction if indicated
+    if (outputInstruct)
+    {
+        // Output CC instruction
+        if (isCntr)
+        {
+            fprintf(fp_instruct, "R ");
+        }
+        // Output Clck instruction
+        fprintf(fp_instruct, "R' ");
+    }
 }
 
 /**
- * Rotates the top face of the cube 90 degrees
+ * Rotates the top face of the cube 90 degrees and writes the instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
  *
  * @param isCntr
  * Specifies the direction of the rotation
+ *
+ * @param outputInstruct
+ * Writes instruction to file if true
  */
-void rotateTopFace(Cube* pCube, bool isCntr)
+void rotateTopFace(Cube* pCube, bool isCntr, bool outputInstruct)
 {
     Piece face[3][3];
     Color temp;
@@ -771,18 +848,33 @@ void rotateTopFace(Cube* pCube, bool isCntr)
         pCube->pieces[TOP_POS[i]].x = pCube->pieces[TOP_POS[i]].y;
         pCube->pieces[TOP_POS[i]].y = temp;
     }
+    
+    // Output instruction if indicated
+    if (outputInstruct)
+    {
+        // Output CC instruction
+        if (isCntr)
+        {
+            fprintf(fp_instruct, "U' ");
+        }
+        // Output Clck instruction
+        fprintf(fp_instruct, "U ");
+    }
 }
 
 /**
- * Rotates the bottom face of the cube 90 degrees
+ * Rotates the bottom face of the cube 90 degrees and writes instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
  *
  * @param isCntr
  * Specifies the direction of the rotation
+ *
+ * @param outputInstruct
+ * Writes instruction to file if true
  */
-void rotateBottomFace(Cube* pCube, bool isCntr)
+void rotateBottomFace(Cube* pCube, bool isCntr, bool outputInstruct)
 {
     Piece face[3][3];
     Color temp;
@@ -834,6 +926,18 @@ void rotateBottomFace(Cube* pCube, bool isCntr)
         temp = pCube->pieces[BOTTOM_POS[i]].x;
         pCube->pieces[BOTTOM_POS[i]].x = pCube->pieces[BOTTOM_POS[i]].y;
         pCube->pieces[BOTTOM_POS[i]].y = temp;
+    }
+    
+    // Output instruction if indicated
+    if (outputInstruct)
+    {
+        // Output CC instruction
+        if (isCntr)
+        {
+            fprintf(fp_instruct, "B ");
+        }
+        // Output Clck instruction
+        fprintf(fp_instruct, "B' ");
     }
 }
 
@@ -1066,7 +1170,7 @@ void rotateMidZ(Cube* pCube, bool isCntr)
 }
 
 /**
- * Turns the cube around the x axis 90 degrees
+ * Turns the cube around the x axis 90 degrees and writes instruction to a file
  *
  * @param pCube
  * Pointer to a cube structure
@@ -1077,9 +1181,18 @@ void rotateMidZ(Cube* pCube, bool isCntr)
 void turnX(Cube* pCube, bool isCntr)
 {
     // Rotate each face of the cube around the x axis
-    rotateLeftFace(pCube, isCntr);
+    rotateLeftFace(pCube, isCntr, false);
     rotateMidX(pCube, isCntr);
-    rotateRightFace(pCube, isCntr);
+    rotateRightFace(pCube, isCntr, false);
+    
+    if (isCntr)
+    {
+        fprintf(fp_instruct, "Tx' ");
+    }
+    else
+    {
+        fprintf(fp_instruct, "Tx ");
+    }
 }
 
 /**
@@ -1094,9 +1207,18 @@ void turnX(Cube* pCube, bool isCntr)
 void turnY(Cube* pCube, bool isCntr)
 {
     // Rotate each face of the cube around the x axis
-    rotateFrontFace(pCube, isCntr);
+    rotateFrontFace(pCube, isCntr, false);
     rotateMidY(pCube, isCntr);
-    rotateBackFace(pCube, isCntr);
+    rotateBackFace(pCube, isCntr, false);
+    
+    if (isCntr)
+    {
+        fprintf(fp_instruct, "Ty' ");
+    }
+    else
+    {
+        fprintf(fp_instruct, "Ty ");
+    }
 }
 
 /**
@@ -1111,9 +1233,18 @@ void turnY(Cube* pCube, bool isCntr)
 void turnZ(Cube* pCube, bool isCntr)
 {
     // Rotate each face of the cube around the x axis
-    rotateTopFace(pCube, isCntr);
+    rotateTopFace(pCube, isCntr, false);
     rotateMidZ(pCube, isCntr);
-    rotateBottomFace(pCube, isCntr);
+    rotateBottomFace(pCube, isCntr, false);
+    
+    if (isCntr)
+    {
+        fprintf(fp_instruct, "Tz' ");
+    }
+    else
+    {
+        fprintf(fp_instruct, "Tz ");
+    }
 }
 
 /**
@@ -1361,32 +1492,32 @@ void daisyTop(Cube* pCube, Piece piece, Color oppColor)
     if (piece.yCoord == 0)
     {
         // Move out of back face
-        rotateBackFace(pCube, false);
+        rotateBackFace(pCube, false, true);
         
         // Rotate top face until edge location not occupied by a daisy edge
         // Compare color of edge with the color of the piece it will replace
         while (oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
         {
             // Rotate the top face of the cube if a daisy piece is in that position
-            rotateTopFace(pCube, true);
+            rotateTopFace(pCube, true, true);
         }
         // Put piece in daisy
-        rotateRightFace(pCube, false);
+        rotateRightFace(pCube, false, true);
     }
     // Put piece in daisy if originally on front face
     else if (piece.yCoord == 2)
     {
         // Move out of top face
-        rotateFrontFace(pCube, true);
+        rotateFrontFace(pCube, true, true);
         // Rotate top face until edge location not occupied by a daisy edge
         // Compare color of edge with the color of the piece it will replace
         while (oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
         {
             // Rotate the top face of the cube if a daisy piece is in that position
-            rotateTopFace(pCube, true);
+            rotateTopFace(pCube, true, true);
         }
         // Put piece in daisy
-        rotateLeftFace(pCube, true);
+        rotateLeftFace(pCube, true, true);
     }
     // Put Piece in daisy if originally on right/left face
     else
@@ -1395,31 +1526,31 @@ void daisyTop(Cube* pCube, Piece piece, Color oppColor)
         if (piece.xCoord == 0)
         {
             // Move piece out of top face
-            rotateLeftFace(pCube, false);
+            rotateLeftFace(pCube, false, true);
             
             // Rotate top face until edge location not occupied by a daisy edge
             // Compare color of edge with the color of the piece it will replace
             while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
             {
                 // Rotate the top face of the cube if a daisy piece is in that position
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Put piece in daisy
-            rotateFrontFace(pCube, false);
+            rotateFrontFace(pCube, false, true);
         }
         // Piece originally on right face
         else
         {
             // Move piece out of top face
-            rotateRightFace(pCube, true);
+            rotateRightFace(pCube, true, true);
             
             // Rotate top face until edge location not occupied by a daisy edge
             while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
             {
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Put piece in daisy
-            rotateBackFace(pCube, true);
+            rotateBackFace(pCube, true, true);
         }
     }
 }
@@ -1450,10 +1581,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top face until edge edge location not occupied with a daisy edge
                 while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateBackFace(pCube, false);
+                rotateBackFace(pCube, false, true);
             }
             // Desired piece is on front face
             else
@@ -1461,10 +1592,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top face until edge edge location not occupied with a daisy edge
                 while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateFrontFace(pCube, false);
+                rotateFrontFace(pCube, false, true);
             }
         }
         // Desired color is on right face
@@ -1476,10 +1607,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top face until edge location not occupied with a daisy edge
                 while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateBackFace(pCube, true);
+                rotateBackFace(pCube, true, true);
             }
             // Desired piece is on front face
             else
@@ -1487,10 +1618,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top face until edge location not occupied with a daisy edge
                 while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateFrontFace(pCube, true);
+                rotateFrontFace(pCube, true, true);
             }
         }
     }
@@ -1506,10 +1637,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while(oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateLeftFace(pCube, false);
+                rotateLeftFace(pCube, false, true);
             }
             // Desired piece is on right face
             else
@@ -1517,10 +1648,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while(oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateRightFace(pCube, false);
+                rotateRightFace(pCube, false, true);
             }
         }
         // Desired color is on front face
@@ -1532,10 +1663,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while(oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateLeftFace(pCube, true);
+                rotateLeftFace(pCube, true, true);
             }
             // Desired piece is on right face
             else
@@ -1543,10 +1674,10 @@ void daisyMid(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while(oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Put piece in daisy
-                rotateRightFace(pCube, true);
+                rotateRightFace(pCube, true, true);
             }
         }
     }
@@ -1573,10 +1704,10 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
             // Rotate top until edge location not occupied with daisy edge
             while (oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
             {
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Place piece in middle layer
-            rotateLeftFace(pCube, true);
+            rotateLeftFace(pCube, true, true);
             // Place piece in daisy
             daisyMid(pCube, piece, oppColor);
         }
@@ -1589,10 +1720,10 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Place piece in middle layer
-                rotateBackFace(pCube, true);
+                rotateBackFace(pCube, true, true);
                 // Place piece in daisy
                 daisyMid(pCube, piece, oppColor);
             }
@@ -1602,10 +1733,10 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Place piece in middle layer
-                rotateFrontFace(pCube, true);
+                rotateFrontFace(pCube, true, true);
                 // Place piece in daisy
                 daisyMid(pCube, piece, oppColor);
             }
@@ -1616,10 +1747,10 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
             // Rotate top until edge location not occupied with daisy edge
             while (oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
             {
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Place piece in middle layer
-            rotateRightFace(pCube, true);
+            rotateRightFace(pCube, true, true);
             // Place piece in daisy
             daisyMid(pCube, piece, oppColor);
         }
@@ -1633,11 +1764,11 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
             // Rotate top until edge location not occupied with daisy edge
             while (oppColor == pCube->pieces[TOP_LEFT_EDGE].z)
             {
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Place piece in daisy
-            rotateLeftFace(pCube, true);
-            rotateLeftFace(pCube, true);
+            rotateLeftFace(pCube, true, true);
+            rotateLeftFace(pCube, true, true);
         }
         // Piece is on front or back face
         else if (piece.xCoord == 1)
@@ -1648,11 +1779,11 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while (oppColor == pCube->pieces[TOP_BACK_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Place piece in daisy
-                rotateBackFace(pCube, true);
-                rotateBackFace(pCube, true);
+                rotateBackFace(pCube, true, true);
+                rotateBackFace(pCube, true, true);
             }
             // Piece is on front face
             else
@@ -1660,11 +1791,11 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
                 // Rotate top until edge location not occupied with daisy edge
                 while (oppColor == pCube->pieces[TOP_FRONT_EDGE].z)
                 {
-                    rotateTopFace(pCube, true);
+                    rotateTopFace(pCube, true, true);
                 }
                 // Place piece in daisy
-                rotateFrontFace(pCube, true);
-                rotateFrontFace(pCube, true);
+                rotateFrontFace(pCube, true, true);
+                rotateFrontFace(pCube, true, true);
             }
         }
         // Piece is on right face
@@ -1673,11 +1804,11 @@ void daisyBottom(Cube* pCube, Piece piece, Color oppColor)
             // Rotate top until edge location not occupied with daisy edge
             while (oppColor == pCube->pieces[TOP_RIGHT_EDGE].z)
             {
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Place piece in daisy
-            rotateRightFace(pCube, true);
-            rotateRightFace(pCube, true);
+            rotateRightFace(pCube, true, true);
+            rotateRightFace(pCube, true, true);
         }
     }
 }
@@ -1698,11 +1829,11 @@ void daisyToCross(Cube* pCube, Color oppColor)
             while (pCube->pieces[TOP_BACK_EDGE].y != pCube->pieces[BACK_CENTER].y)
             {
                 // Rotate top until matching piece found
-                rotateTopFace(pCube, true);
+                rotateTopFace(pCube, true, true);
             }
             // Put piece in place
-            rotateBackFace(pCube, true);
-            rotateBackFace(pCube, true);
+            rotateBackFace(pCube, true, true);
+            rotateBackFace(pCube, true, true);
         }
         else if (i == 1)
         {
@@ -1710,11 +1841,11 @@ void daisyToCross(Cube* pCube, Color oppColor)
             while ((pCube->pieces[TOP_LEFT_EDGE].x != pCube->pieces[LEFT_CENTER].x) || pCube->pieces[TOP_LEFT_EDGE].z != oppColor)
             {
                 // Rotate top until matching piece found
-               rotateTopFace(pCube, true);
+               rotateTopFace(pCube, true, true);
             }
             // Put piece in place
-            rotateLeftFace(pCube, true);
-            rotateLeftFace(pCube, true);
+            rotateLeftFace(pCube, true, true);
+            rotateLeftFace(pCube, true, true);
         }
         else if (i == 2)
         {
@@ -1722,11 +1853,11 @@ void daisyToCross(Cube* pCube, Color oppColor)
             while ((pCube->pieces[TOP_RIGHT_EDGE].x != pCube->pieces[RIGHT_CENTER].x) || pCube->pieces[TOP_RIGHT_EDGE].z != oppColor)
             {
                 // Rotate top until matching piece found
-               rotateTopFace(pCube, true);
+               rotateTopFace(pCube, true, true);
             }
             // Put piece in place
-            rotateRightFace(pCube, true);
-            rotateRightFace(pCube, true);
+            rotateRightFace(pCube, true, true);
+            rotateRightFace(pCube, true, true);
         }
         else
         {
@@ -1734,11 +1865,11 @@ void daisyToCross(Cube* pCube, Color oppColor)
             while ((pCube->pieces[TOP_FRONT_EDGE].y != pCube->pieces[FRONT_CENTER].y) || pCube->pieces[TOP_FRONT_EDGE].z != oppColor)
             {
                 // Rotate top until matching piece found
-               rotateTopFace(pCube, true);
+               rotateTopFace(pCube, true, true);
             }
             // Put piece in place
-            rotateFrontFace(pCube, true);
-            rotateFrontFace(pCube, true);
+            rotateFrontFace(pCube, true, true);
+            rotateFrontFace(pCube, true, true);
         }
     }
 }
@@ -1780,9 +1911,9 @@ void solveFirstLayerCorners(Cube* pCube)
                         turnZ(pCube, true);
                     }
                     // Move piece to bottom right front corner
-                    rotateLeftFace(pCube, false);
-                    rotateBottomFace(pCube, true);
-                    rotateLeftFace(pCube, true);
+                    rotateLeftFace(pCube, false, true);
+                    rotateBottomFace(pCube, true, true);
+                    rotateLeftFace(pCube, true, true);
                     
                     // Reassign piece with piece in bottom right front corner
                     piece = pCube->pieces[BOTTOM_RIGHT_FRONT_CORNER];
@@ -1796,9 +1927,9 @@ void solveFirstLayerCorners(Cube* pCube)
                         turnZ(pCube, false);
                     }
                     // Move piece to bottom left front corner
-                    rotateRightFace(pCube, false);
-                    rotateBottomFace(pCube, false);
-                    rotateRightFace(pCube, true);
+                    rotateRightFace(pCube, false, true);
+                    rotateBottomFace(pCube, false, true);
+                    rotateRightFace(pCube, true, true);
                     
                     // Reassign piece with piece in bottom left front corner
                     piece = pCube->pieces[BOTTOM_LEFT_FRONT_CORNER];
@@ -2002,18 +2133,18 @@ void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color)
                || (piece.y == color && (piece.x != pCube->pieces[LEFT_CENTER].x))
                || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
         {
-            rotateBottomFace(pCube, true);
+            rotateBottomFace(pCube, true, true);
             turnZ(pCube, false);
             
         }
         // Desired color is facing down, rieorient so desired color facing front
         if (piece.z == color)
         {
-            rotateFrontFace(pCube, true);
-            rotateBottomFace(pCube, true);
-            rotateFrontFace(pCube, false);
-            rotateBottomFace(pCube, false);
-            rotateBottomFace(pCube, false);
+            rotateFrontFace(pCube, true, true);
+            rotateBottomFace(pCube, true, true);
+            rotateFrontFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
         }
         
         // Top center color is facing left
@@ -2029,10 +2160,10 @@ void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color)
         else
         {
             // Put piece in place
-            rotateBottomFace(pCube, true);
-            rotateLeftFace(pCube, false);
-            rotateBottomFace(pCube, false);
-            rotateLeftFace(pCube, true);
+            rotateBottomFace(pCube, true, true);
+            rotateLeftFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
+            rotateLeftFace(pCube, true, true);
         }
     }
     // Piece is on front face
@@ -2043,17 +2174,17 @@ void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color)
                || (piece.y == color && (piece.x != pCube->pieces[LEFT_CENTER].x))
                || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
         {
-            rotateBottomFace(pCube, true);
+            rotateBottomFace(pCube, true, true);
             turnZ(pCube, false);
         }
         // Desired color is facing down, rieorient so desired color facing front
         if (piece.z == color)
         {
-            rotateFrontFace(pCube, true);
-            rotateBottomFace(pCube, true);
-            rotateFrontFace(pCube, false);
-            rotateBottomFace(pCube, false);
-            rotateBottomFace(pCube, false);
+            rotateFrontFace(pCube, true, true);
+            rotateBottomFace(pCube, true, true);
+            rotateFrontFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
         }
         
         // Top center color is facing left
@@ -2069,10 +2200,10 @@ void putBottomLeftCornerOnTop(Cube* pCube, Piece piece, Color color)
         else
         {
             // Put piece in place
-            rotateBottomFace(pCube, true);
-            rotateLeftFace(pCube, false);
-            rotateBottomFace(pCube, false);
-            rotateLeftFace(pCube, true);
+            rotateBottomFace(pCube, true, true);
+            rotateLeftFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
+            rotateLeftFace(pCube, true, true);
         }
     }
 }
@@ -2105,17 +2236,17 @@ void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color)
                || (piece.y == color && (piece.x != pCube->pieces[RIGHT_CENTER].x))
                || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
         {
-            rotateBottomFace(pCube, true);
+            rotateBottomFace(pCube, true, true);
             turnZ(pCube, false);
         }
         // Desired color is facing down, rieorient so desired color facing front
         if (piece.z == color)
         {
-            rotateFrontFace(pCube, false);
-            rotateBottomFace(pCube, false);
-            rotateFrontFace(pCube, true);
-            rotateBottomFace(pCube, true);
-            rotateBottomFace(pCube, true);
+            rotateFrontFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
+            rotateFrontFace(pCube, true, true);
+            rotateBottomFace(pCube, true, true);
+            rotateBottomFace(pCube, true, true);
         }
         // Top center color is facing right
         if (piece.x == color)
@@ -2130,10 +2261,10 @@ void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color)
         else
         {
             // Put piece in place
-            rotateBottomFace(pCube, false);
-            rotateRightFace(pCube, false);
-            rotateBottomFace(pCube, true);
-            rotateRightFace(pCube, true);
+            rotateBottomFace(pCube, false, true);
+            rotateRightFace(pCube, false, true);
+            rotateBottomFace(pCube, true, true);
+            rotateRightFace(pCube, true, true);
         }
     }
     // Piece is on front face
@@ -2144,17 +2275,17 @@ void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color)
                || (piece.y == color && (piece.x != pCube->pieces[RIGHT_CENTER].x))
                || (piece.x == color && (piece.y != pCube->pieces[FRONT_CENTER].y)))
         {
-            rotateBottomFace(pCube, true);
+            rotateBottomFace(pCube, true, true);
             turnZ(pCube, false);
         }
         // Desired color is facing down, rieorient so desired color facing front
         if (piece.z == color)
         {
-            rotateFrontFace(pCube, false);
-            rotateBottomFace(pCube, false);
-            rotateFrontFace(pCube, true);
-            rotateBottomFace(pCube, true);
-            rotateBottomFace(pCube, true);
+            rotateFrontFace(pCube, false, true);
+            rotateBottomFace(pCube, false, true);
+            rotateFrontFace(pCube, true, true);
+            rotateBottomFace(pCube, true, true);
+            rotateBottomFace(pCube, true, true);
         }
         
         // Top center color is facing right
@@ -2170,10 +2301,10 @@ void putBottomRightCornerOnTop(Cube* pCube, Piece piece, Color color)
         else
         {
             // Put piece in place
-            rotateBottomFace(pCube, false);
-            rotateRightFace(pCube, false);
-            rotateBottomFace(pCube, true);
-            rotateRightFace(pCube, true);
+            rotateBottomFace(pCube, false, true);
+            rotateRightFace(pCube, false, true);
+            rotateBottomFace(pCube, true, true);
+            rotateRightFace(pCube, true, true);
         }
     }
 }
@@ -2223,7 +2354,7 @@ void solveMidLayerEdges(Cube* pCube)
                     // Rotate piece to front face
                     while ((pCube->pieces[TOP_FRONT_EDGE].y != centerColors[i]) || (pCube->pieces[TOP_FRONT_EDGE].z == pCube->pieces[TOP_CENTER].z))
                     {
-                        rotateTopFace(pCube, true);
+                        rotateTopFace(pCube, true, true);
                     }
                     // Reassign piece
                     piece = pCube->pieces[TOP_FRONT_EDGE];
@@ -2255,8 +2386,8 @@ void solveMidLayerEdges(Cube* pCube)
                         // X color matches right center color
                         else if (piece.x == pCube->pieces[RIGHT_CENTER].x)
                         {
-                            rotateTopFace(pCube, true);
-                            rotateTopFace(pCube, true);
+                            rotateTopFace(pCube, true, true);
+                            rotateTopFace(pCube, true, true);
                             turnZ(pCube, false);
                             swapTopEdgeLeftEdge(pCube);
                             turnZ(pCube, true);
@@ -2268,7 +2399,7 @@ void solveMidLayerEdges(Cube* pCube)
                         // Y color matches left center color
                         if (piece.y == pCube->pieces[LEFT_CENTER].x)
                         {
-                            rotateTopFace(pCube, true);
+                            rotateTopFace(pCube, true, true);
                             turnZ(pCube, true);
                             swapTopEdgeRightEdge(pCube);
                             turnZ(pCube, false);
@@ -2276,7 +2407,7 @@ void solveMidLayerEdges(Cube* pCube)
                         // Y color matches right center color
                         else if (piece.y == pCube->pieces[RIGHT_CENTER].x)
                         {
-                            rotateTopFace(pCube, false);
+                            rotateTopFace(pCube, false, true);
                             turnZ(pCube, false);
                             swapTopEdgeLeftEdge(pCube);
                             turnZ(pCube, true);
@@ -2288,7 +2419,7 @@ void solveMidLayerEdges(Cube* pCube)
                         // Y color matches left center color
                         if (piece.y == pCube->pieces[LEFT_CENTER].x)
                         {
-                            rotateTopFace(pCube, false);
+                            rotateTopFace(pCube, false, true);
                             turnZ(pCube, true);
                             swapTopEdgeRightEdge(pCube);
                             turnZ(pCube, false);
@@ -2296,7 +2427,7 @@ void solveMidLayerEdges(Cube* pCube)
                         // Y color matches right center color
                         else if (piece.y == pCube->pieces[RIGHT_CENTER].x)
                         {
-                            rotateTopFace(pCube, true);
+                            rotateTopFace(pCube, true, true);
                             turnZ(pCube, false);
                             swapTopEdgeLeftEdge(pCube);
                             turnZ(pCube, true);
@@ -2315,8 +2446,8 @@ void solveMidLayerEdges(Cube* pCube)
                         // X color matches right center color
                         else if (piece.x == pCube->pieces[LEFT_CENTER].x)
                         {
-                            rotateTopFace(pCube, true);
-                            rotateTopFace(pCube, true);
+                            rotateTopFace(pCube, true, true);
+                            rotateTopFace(pCube, true, true);
                             turnZ(pCube, true);
                             swapTopEdgeRightEdge(pCube);
                             turnZ(pCube, false);
@@ -2467,14 +2598,14 @@ bool faceMidEdgesInPlace(Cube* pCube, Color faceColor)
  */
 void swapTopEdgeRightEdge(Cube* pCube)
 {
-    rotateTopFace(pCube, false);
-    rotateRightFace(pCube, true);
-    rotateTopFace(pCube, true);
-    rotateRightFace(pCube, false);
-    rotateTopFace(pCube, true);
-    rotateFrontFace(pCube, true);
-    rotateTopFace(pCube, false);
-    rotateFrontFace(pCube, false);
+    rotateTopFace(pCube, false, true);
+    rotateRightFace(pCube, true, true);
+    rotateTopFace(pCube, true, true);
+    rotateRightFace(pCube, false, true);
+    rotateTopFace(pCube, true, true);
+    rotateFrontFace(pCube, true, true);
+    rotateTopFace(pCube, false, true);
+    rotateFrontFace(pCube, false, true);
 }
 
 /**
@@ -2485,14 +2616,14 @@ void swapTopEdgeRightEdge(Cube* pCube)
  */
 void swapTopEdgeLeftEdge(Cube* pCube)
 {
-    rotateTopFace(pCube, true);
-    rotateLeftFace(pCube, true);
-    rotateTopFace(pCube, false);
-    rotateLeftFace(pCube, false);
-    rotateTopFace(pCube, false);
-    rotateFrontFace(pCube, false);
-    rotateTopFace(pCube, true);
-    rotateFrontFace(pCube, true);
+    rotateTopFace(pCube, true, true);
+    rotateLeftFace(pCube, true, true);
+    rotateTopFace(pCube, false, true);
+    rotateLeftFace(pCube, false, true);
+    rotateTopFace(pCube, false, true);
+    rotateFrontFace(pCube, false, true);
+    rotateTopFace(pCube, true, true);
+    rotateFrontFace(pCube, true, true);
 }
 
 // Top cross solving functions
@@ -2514,12 +2645,12 @@ void createTopCross(Cube* pCube)
         orientCubeForTopCross(pCube, faceColor);
         
         // Perform cross solving algorithm
-        rotateFrontFace(pCube, false);
-        rotateTopFace(pCube, false);
-        rotateRightFace(pCube, true);
-        rotateTopFace(pCube, true);
-        rotateRightFace(pCube, false);
-        rotateFrontFace(pCube, true);
+        rotateFrontFace(pCube, false, true);
+        rotateTopFace(pCube, false, true);
+        rotateRightFace(pCube, true, true);
+        rotateTopFace(pCube, true, true);
+        rotateRightFace(pCube, false, true);
+        rotateFrontFace(pCube, true, true);
     }
 }
 
@@ -2611,18 +2742,16 @@ void orientTopCorners(Cube* pCube)
     {
         // Orient the cube correctly
         orientCubeForTopCorners(pCube, faceColor);
-        printCube(pCube);
         
         // Algorithm to place corner pieces
-        rotateRightFace(pCube, true);
-        rotateTopFace(pCube, false);
-        rotateRightFace(pCube, false);
-        rotateTopFace(pCube, false);
-        rotateRightFace(pCube, true);
-        rotateTopFace(pCube, false);
-        rotateTopFace(pCube, false);
-        rotateRightFace(pCube, false);
-        printCube(pCube);
+        rotateRightFace(pCube, true, true);
+        rotateTopFace(pCube, false, true);
+        rotateRightFace(pCube, false, true);
+        rotateTopFace(pCube, false, true);
+        rotateRightFace(pCube, true, true);
+        rotateTopFace(pCube, false, true);
+        rotateTopFace(pCube, false, true);
+        rotateRightFace(pCube, false, true);
     }
 }
 
@@ -2720,23 +2849,22 @@ void solveTopCorners(Cube* pCube)
     while(!(checkTopCornersSolved(pCube)))
     {
         orientCubeForTopCornerSwap(pCube);
-        printCube(pCube);
         
-        rotateRightFace(pCube, false);
-        rotateFrontFace(pCube, false);
-        rotateRightFace(pCube, false);
-        rotateBackFace(pCube, true);
-        rotateBackFace(pCube, true);
+        rotateRightFace(pCube, false, true);
+        rotateFrontFace(pCube, false, true);
+        rotateRightFace(pCube, false, true);
+        rotateBackFace(pCube, true, true);
+        rotateBackFace(pCube, true, true);
         
-        rotateRightFace(pCube, true);
-        rotateFrontFace(pCube, true);
-        rotateRightFace(pCube, false);
-        rotateBackFace(pCube, true);
-        rotateBackFace(pCube, true);
+        rotateRightFace(pCube, true, true);
+        rotateFrontFace(pCube, true, true);
+        rotateRightFace(pCube, false, true);
+        rotateBackFace(pCube, true, true);
+        rotateBackFace(pCube, true, true);
         
-        rotateRightFace(pCube, true);
-        rotateRightFace(pCube, true);
-        rotateTopFace(pCube, true);
+        rotateRightFace(pCube, true, true);
+        rotateRightFace(pCube, true, true);
+        rotateTopFace(pCube, true, true);
     }
 }
 
@@ -2753,7 +2881,7 @@ void orientCubeForTopCornerSwap(Cube* pCube)
            && (pCube->pieces[BACK_RIGHT_TOP_CORNER].x != pCube->pieces[RIGHT_CENTER].x || pCube->pieces[BACK_RIGHT_TOP_CORNER].y != pCube->pieces[BACK_CENTER].y)
            && (pCube->pieces[BACK_LEFT_TOP_CORNER].x != pCube->pieces[LEFT_CENTER].x || pCube->pieces[BACK_LEFT_TOP_CORNER].y != pCube->pieces[BACK_CENTER].y))
     {
-        rotateTopFace(pCube, true);
+        rotateTopFace(pCube, true, true);
     }
     
     for (int i = 0; i < NUM_CENTER - 2; ++i)
@@ -2807,22 +2935,20 @@ void solveTopEdges(Cube* pCube)
         
         // Places a solved face in the back position
         orientCubeForTopEdgeSolve(pCube);
-        printCube(pCube);
         
         // Algorithm to rotate 3 edge pieces
-        rotateFrontFace(pCube, false);
-        rotateFrontFace(pCube, false);
-        rotateTopFace(pCube, false);
-        rotateLeftFace(pCube, false);
-        rotateRightFace(pCube, false);
-        rotateFrontFace(pCube, false);
-        rotateFrontFace(pCube, false);
-        rotateLeftFace(pCube, true);
-        rotateRightFace(pCube, true);
-        rotateTopFace(pCube, false);
-        rotateFrontFace(pCube, false);
-        rotateFrontFace(pCube, false);
-        printCube(pCube);
+        rotateFrontFace(pCube, false, true);
+        rotateFrontFace(pCube, false, true);
+        rotateTopFace(pCube, false, true);
+        rotateLeftFace(pCube, false, true);
+        rotateRightFace(pCube, false, true);
+        rotateFrontFace(pCube, false, true);
+        rotateFrontFace(pCube, false, true);
+        rotateLeftFace(pCube, true, true);
+        rotateRightFace(pCube, true, true);
+        rotateTopFace(pCube, false, true);
+        rotateFrontFace(pCube, false, true);
+        rotateFrontFace(pCube, false, true);
     }
 }
 

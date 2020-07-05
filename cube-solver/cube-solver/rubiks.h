@@ -243,12 +243,12 @@ Color abbreiveToColor(char colorAbreive);
 Color getOpposite(Color squareColor);
 
 // Cube manipulation
-void rotateFrontFace(Cube* pCube, bool isCntr);
-void rotateBackFace(Cube* pCube, bool isCntr);
-void rotateLeftFace(Cube* pCube, bool isCntr);
-void rotateRightFace(Cube* pCube, bool isCntr);
-void rotateTopFace(Cube* pCube, bool isCntr);
-void rotateBottomFace(Cube* pCube, bool isCntr);
+void rotateFrontFace(Cube* pCube, bool isCntr, bool outputInstruct);
+void rotateBackFace(Cube* pCube, bool isCntr, bool outputInstruct);
+void rotateLeftFace(Cube* pCube, bool isCntr, bool outputInstruct);
+void rotateRightFace(Cube* pCube, bool isCntr, bool outputInstruct);
+void rotateTopFace(Cube* pCube, bool isCntr, bool outputInstruct);
+void rotateBottomFace(Cube* pCube, bool isCntr, bool outputInstruct);
 void rotateMidX(Cube* pCube, bool isCntr);
 void rotateMidY(Cube* pCube, bool isCntr);
 void rotateMidZ(Cube* pCube, bool isCntr);

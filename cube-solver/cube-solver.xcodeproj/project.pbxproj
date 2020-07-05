@@ -26,6 +26,7 @@
 		BF4E37CB24AEE7B40033C99A /* cube-solver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "cube-solver"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF4E37CE24AEE7B40033C99A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		BF82892724B1663B00C750E2 /* rubiks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rubiks.h; sourceTree = "<group>"; };
+		BF82892D24B18B3A00C750E2 /* instructions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = instructions.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 			children = (
 				BF4E37CE24AEE7B40033C99A /* main.c */,
 				BF82892724B1663B00C750E2 /* rubiks.h */,
+				BF82892D24B18B3A00C750E2 /* instructions.txt */,
 			);
 			path = "cube-solver";
 			sourceTree = "<group>";
