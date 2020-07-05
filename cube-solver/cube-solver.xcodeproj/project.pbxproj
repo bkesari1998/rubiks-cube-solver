@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		BF4E37CF24AEE7B40033C99A /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BF4E37CE24AEE7B40033C99A /* main.c */; };
+		BF5323E924B25A95008CD23C /* cubeUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = BF5323E824B25A95008CD23C /* cubeUtils.c */; };
+		BF5323EE24B27648008CD23C /* cubeSolve.c in Sources */ = {isa = PBXBuildFile; fileRef = BF5323ED24B27648008CD23C /* cubeSolve.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,7 +27,12 @@
 /* Begin PBXFileReference section */
 		BF4E37CB24AEE7B40033C99A /* cube-solver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "cube-solver"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF4E37CE24AEE7B40033C99A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		BF82892724B1663B00C750E2 /* rubiks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rubiks.h; sourceTree = "<group>"; };
+		BF5323E824B25A95008CD23C /* cubeUtils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cubeUtils.c; sourceTree = "<group>"; };
+		BF5323EA24B25C0E008CD23C /* cubeUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cubeUtils.h; sourceTree = "<group>"; };
+		BF5323EB24B27479008CD23C /* globalVars.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globalVars.h; sourceTree = "<group>"; };
+		BF5323EC24B27648008CD23C /* cubeSolve.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cubeSolve.h; sourceTree = "<group>"; };
+		BF5323ED24B27648008CD23C /* cubeSolve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cubeSolve.c; sourceTree = "<group>"; };
+		BF82892724B1663B00C750E2 /* rubiksConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rubiksConst.h; sourceTree = "<group>"; };
 		BF82892D24B18B3A00C750E2 /* instructions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = instructions.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,8 +67,13 @@
 			isa = PBXGroup;
 			children = (
 				BF4E37CE24AEE7B40033C99A /* main.c */,
-				BF82892724B1663B00C750E2 /* rubiks.h */,
+				BF5323E824B25A95008CD23C /* cubeUtils.c */,
+				BF82892724B1663B00C750E2 /* rubiksConst.h */,
+				BF5323EB24B27479008CD23C /* globalVars.h */,
 				BF82892D24B18B3A00C750E2 /* instructions.txt */,
+				BF5323EA24B25C0E008CD23C /* cubeUtils.h */,
+				BF5323EC24B27648008CD23C /* cubeSolve.h */,
+				BF5323ED24B27648008CD23C /* cubeSolve.c */,
 			);
 			path = "cube-solver";
 			sourceTree = "<group>";
@@ -123,6 +135,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF5323EE24B27648008CD23C /* cubeSolve.c in Sources */,
+				BF5323E924B25A95008CD23C /* cubeUtils.c in Sources */,
 				BF4E37CF24AEE7B40033C99A /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
