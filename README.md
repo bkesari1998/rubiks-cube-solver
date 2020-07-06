@@ -21,7 +21,15 @@ This is the input string for a completed cube: "wwwwwwwwwgggggggggrrrrrrrrrbbbbb
 This is a input string for a mixed up cube: "wowgybwyogygybyoggrowbrgywrborwggybrbwororbwborgowryby"
 
 ### Outputs
-The program outputs two files which both include instructions to solve a Rubik's cube of the user entered permutation. The first file, 'instr.txt', holds the initialy optimized instructions. The second file, 'instr2.txt', holds further optimized instructions that the first optimization processed missed. Each instruction indicates a face to rotate and the direction of rotation. Clockwise and counterclockwise rotations are taken as a rotation of the face if it were directly facing the user. The instructions are presented as follows:
+The program outputs a display of the cube to the terminal window after each solution step is executed. Each square of the cube is represented by an integer corresponding to its enum value. These values are:
+- White: 0
+- Yellow: 1
+- Orange: 2
+- Red: 3
+- Blue: 4
+- Green: 5
+<br />
+The program also outputs two files which both include instructions to solve a Rubik's cube of the user entered permutation. The first file, 'instr.txt', holds the initialy optimized instructions. The second file, 'instr2.txt', holds further optimized instructions that the first optimization processed missed. Each instruction indicates a face to rotate and the direction of rotation. Clockwise and counterclockwise rotations are taken as a rotation of the face if it were directly facing the user. The instructions are presented as follows:
 
 - R: rotate the right face in the clockwise direction
 - r: rotate the right face in the counterclockwise direction
