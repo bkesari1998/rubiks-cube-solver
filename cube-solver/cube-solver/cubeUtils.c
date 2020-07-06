@@ -1466,6 +1466,21 @@ bool optimizeInstruct(InstructLink* head)
                 shiftLL(link, i, 4);
                 optimized = true;
             }
+            
+            // Check for three consecutive turns of one face in the same direction
+            if ((instr1 == instr2) && (instr1 == instr3))
+            {
+                if (isupper(instr1))
+                {
+                    link->instrArr[i] = tolower(instr1);
+                }
+                else
+                {
+                    link->instrArr[i] = toupper(instr1);
+                }
+                shiftLL(link, i + 1, 2);
+                optimized = true;
+            }
         }
         
         // Check the last elements of array with the first elements of the next link array
@@ -1499,6 +1514,22 @@ bool optimizeInstruct(InstructLink* head)
                 optimized = true;
             }
             
+            // Check for three consecutive turns of one face in the same direction
+            if ((instr1 == instr2) && (instr1 == instr3))
+            {
+                if (isupper(instr1))
+                {
+                    link->instrArr[INSTR_SIZE - 3] = tolower(instr1);
+                }
+                else
+                {
+                    link->instrArr[INSTR_SIZE - 3] = toupper(instr1);
+                }
+                
+                shiftLL(link, INSTR_SIZE - 2, 2);
+                optimized = true;
+            }
+            
             // Assign instr to consecutive values in the array
             instr1 = link->instrArr[INSTR_SIZE - 2];
             instr2 = link->instrArr[INSTR_SIZE - 1];
@@ -1527,6 +1558,22 @@ bool optimizeInstruct(InstructLink* head)
                 optimized = true;
             }
             
+            // Check for three consecutive turns of one face in the same direction
+            if ((instr1 == instr2) && (instr1 == instr3))
+            {
+                if (isupper(instr1))
+                {
+                    link->instrArr[INSTR_SIZE - 2] = tolower(instr1);
+                }
+                else
+                {
+                    link->instrArr[INSTR_SIZE - 2] = toupper(instr1);
+                }
+                
+                shiftLL(link, INSTR_SIZE - 1, 2);
+                optimized = true;
+            }
+            
             // Assign instr to consecutive values in the array
             instr1 = link->instrArr[INSTR_SIZE - 1];
             instr2 = link->next->instrArr[0];
@@ -1552,6 +1599,22 @@ bool optimizeInstruct(InstructLink* head)
             {
                 // shift the list to get rid of unneccesary instructions
                 shiftLL(link, INSTR_SIZE - 1, 4);
+                optimized = true;
+            }
+            
+            // Check for three consecutive turns of one face in the same direction
+            if ((instr1 == instr2) && (instr1 == instr3))
+            {
+                if (isupper(instr1))
+                {
+                    link->instrArr[INSTR_SIZE - 2] = tolower(instr1);
+                }
+                else
+                {
+                    link->instrArr[INSTR_SIZE - 2] = toupper(instr1);
+                }
+                
+                shiftLL(link->next, 0, 2);
                 optimized = true;
             }
         }
