@@ -1,5 +1,5 @@
 # rubiks-cube-solver
-This is a C program that solves a Rubik's Cube.
+This is a C program that solves a Rubik's Cube and outputs the instructions used to solve the Cube.
 
 ## Usage
 ### Inputs
