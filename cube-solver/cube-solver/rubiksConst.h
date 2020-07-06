@@ -107,6 +107,9 @@
 // Define DNE constant for arrays
 #define DNE -1
 
+// Define instruction array size for linked list
+#define INSTR_SIZE 200
+
 // Create const arrays for indexes in user input string that correspond to the color of each side
 extern const int X_INDEXES[];
 
@@ -197,5 +200,14 @@ typedef struct piece {
 typedef struct cubes {
     Piece pieces[NUM_PIECES];
 } Cube;
+
+// Define instructions linked list link
+typedef struct instructLink {
+    int linkNo;
+    int instr_index;
+    char instrArr[INSTR_SIZE];
+    struct instructLink* prev;
+    struct instructLink* next;
+} InstructLink;
 
 #endif /* rubiksConst.h */

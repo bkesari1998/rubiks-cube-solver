@@ -9,6 +9,9 @@
 #ifndef cubeUtils_h
 #define cubeUtils_h
 
+// Global linked list pointer
+extern InstructLink* instrList;
+
 // User input fuctions
 void getColors(char* colorArr);
 bool isColor(char input);
@@ -38,6 +41,12 @@ void turnZ(Cube* pCube, bool isCntr);
 // Matrix rotation
 void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
+
+// Linked list functions
+InstructLink* createNextLink(InstructLink* prev);
+void initLink (InstructLink* link);
+void optimizeInstruct(InstructLink* head);
+void printInstruct(InstructLink* head, FILE* fp_instruct);
 
 // Cube printing
 void printCube(Cube* pCube);

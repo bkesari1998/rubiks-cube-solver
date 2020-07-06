@@ -33,7 +33,6 @@
 		BF5323EC24B27648008CD23C /* cubeSolve.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cubeSolve.h; sourceTree = "<group>"; };
 		BF5323ED24B27648008CD23C /* cubeSolve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cubeSolve.c; sourceTree = "<group>"; };
 		BF82892724B1663B00C750E2 /* rubiksConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rubiksConst.h; sourceTree = "<group>"; };
-		BF82892D24B18B3A00C750E2 /* instructions.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = instructions.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +69,6 @@
 				BF5323E824B25A95008CD23C /* cubeUtils.c */,
 				BF82892724B1663B00C750E2 /* rubiksConst.h */,
 				BF5323EB24B27479008CD23C /* globalVars.h */,
-				BF82892D24B18B3A00C750E2 /* instructions.txt */,
 				BF5323EA24B25C0E008CD23C /* cubeUtils.h */,
 				BF5323EC24B27648008CD23C /* cubeSolve.h */,
 				BF5323ED24B27648008CD23C /* cubeSolve.c */,
