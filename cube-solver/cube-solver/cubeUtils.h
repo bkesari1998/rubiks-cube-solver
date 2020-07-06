@@ -45,8 +45,9 @@ void rotateMatCntr(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW]);
 // Linked list functions
 InstructLink* createNextLink(InstructLink* prev);
 void initLink (InstructLink* link);
-void optimizeInstruct(InstructLink* head);
+bool optimizeInstruct(InstructLink* head);
 void printInstruct(InstructLink* head, FILE* fp_instruct);
+void shiftLL(InstructLink* link, int index, int shiftAmt);
 
 // Cube printing
 void printCube(Cube* pCube);

@@ -1422,185 +1422,192 @@ void initLink(InstructLink* link)
  * @param head
  * Pointer to the first link in the instructions linked list
  */
-void optimizeInstruct(InstructLink* head)
+bool optimizeInstruct(InstructLink* head)
 {
     InstructLink* link = head;
-    char instr1;
-    char instr2;
-    char instr3;
-    char instr4;
+    bool optimized = false;
     
-    // Iterate for each link
-    while(link != NULL)
+    // Iterate through last link
+    while (link != NULL)
     {
-        // Check list for uneccesarry instructions
+        // Instructions will be processed in groups of 4
+        char instr1;
+        char instr2;
+        char instr3;
+        char instr4;
+        
+        // Iterate through 4th to last element in the array within a link
         for (int i = 0; i < INSTR_SIZE - 3; ++i)
         {
+            // Assign instr to consecutive values in the array
             instr1 = link->instrArr[i];
             instr2 = link->instrArr[i + 1];
             instr3 = link->instrArr[i + 2];
             instr4 = link->instrArr[i + 3];
             
+            // Return from function if last instruction reached
+            if (instr1 == (char)NULL)
+            {
+                return optimized;
+            }
+            
+            // Check for consecutive clockwise and counterclockwise rotation of the same face
             if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
             {
-                link->instrArr[i] = 'V';
-                link->instrArr[i + 1] = 'V';
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, i, 2);
+                optimized = true;
             }
-            else if ((instr1 == instr2) && (instr1 == instr3) && (instr1 == instr4))
+            
+            // Check for consectutive full rotation of a face
+            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
             {
-                link->instrArr[i] = 'V';
-                link->instrArr[i + 1] = 'V';
-                link->instrArr[i + 2] = 'V';
-                link->instrArr[i + 3] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[i] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[i] = toupper(instr1);
-                }
-                
-                link->instrArr[i + 1] = 'V';
-                link->instrArr[i + 2] = 'V';
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, i, 4);
+                optimized = true;
             }
         }
         
-        // Accounts for overlap between links
+        // Check the last elements of array with the first elements of the next link array
         if (link->next != NULL)
         {
+            // Assign instr to consecutive values in the array
             instr1 = link->instrArr[INSTR_SIZE - 3];
             instr2 = link->instrArr[INSTR_SIZE - 2];
             instr3 = link->instrArr[INSTR_SIZE - 1];
             instr4 = link->next->instrArr[0];
             
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
+            // Return from fuction if last instruction reached
+            if (instr1 == (char)NULL)
             {
-                link->instrArr[INSTR_SIZE - 3] = 'V';
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3) && (instr1 == instr4))
-            {
-                link->instrArr[INSTR_SIZE - 3] = 'V';
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-                link->instrArr[INSTR_SIZE - 1] = 'V';
-                link->next->instrArr[0] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 3] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 3] = toupper(instr1);
-                }
-                
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-                link->instrArr[INSTR_SIZE - 1] = 'V';
+                return optimized;
             }
             
+            // Check for consecutive clockwise and counterclockwise rotation of the same face
+            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
+            {
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, INSTR_SIZE - 3, 2);
+                optimized = true;
+            }
+            
+            // Check for consectutive full rotation of a face
+            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
+            {
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, INSTR_SIZE - 3, 4);
+                optimized = true;
+            }
+            
+            // Assign instr to consecutive values in the array
             instr1 = link->instrArr[INSTR_SIZE - 2];
             instr2 = link->instrArr[INSTR_SIZE - 1];
             instr3 = link->next->instrArr[0];
             instr4 = link->next->instrArr[1];
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
+            
+            // Return from function if last instruction reached
+            if (instr1 == (char)NULL)
             {
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-                link->instrArr[INSTR_SIZE - 1] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3) && (instr1 == instr4))
-            {
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-                link->instrArr[INSTR_SIZE - 1] = 'V';
-                link->next->instrArr[0] = 'V';
-                link->next->instrArr[1] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 2] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 2] = toupper(instr1);
-                }
-                
-                link->instrArr[INSTR_SIZE - 1] = 'V';
-                link->next->instrArr[0] = 'V';
+                return optimized;
             }
             
+            // Check for consecutive clockwise and counterclockwise rotation of the same face
+            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
+            {
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, INSTR_SIZE - 2, 2);
+                optimized = true;
+            }
+            
+            // Check for consectutive full rotation of a face
+            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
+            {
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, INSTR_SIZE - 2, 4);
+                optimized = true;
+            }
+            
+            // Assign instr to consecutive values in the array
             instr1 = link->instrArr[INSTR_SIZE - 1];
             instr2 = link->next->instrArr[0];
             instr3 = link->next->instrArr[1];
             instr4 = link->next->instrArr[2];
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
+            
+            // Return from function if last instruction reached
+            if (instr1 == (char)NULL)
             {
-                link->instrArr[INSTR_SIZE - 1] = 'V';
-                link->next->instrArr[0] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3) && (instr1 == instr4))
-            {
-                link->instrArr[INSTR_SIZE - 1] = 'V';
-                link->next->instrArr[0] = 'V';
-                link->next->instrArr[1] = 'V';
-                link->next->instrArr[2] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 1] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 1] = toupper(instr1);
-                }
-                
-                link->next->instrArr[0] = 'V';
-                link->next->instrArr[1] = 'V';
-            }
-        }
-        // Accounts for last link
-        else
-        {
-            instr1 = link->instrArr[INSTR_SIZE - 3];
-            instr2 = link->instrArr[INSTR_SIZE - 2];
-            instr3 = link->instrArr[INSTR_SIZE - 1];
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
-            {
-                link->instrArr[INSTR_SIZE - 3] = 'V';
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-            }
-            else if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 3] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 3] = toupper(instr1);
-                }
-                
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-                link->instrArr[INSTR_SIZE - 1] = 'V';
+                return optimized;
             }
             
-            instr1 = link->instrArr[INSTR_SIZE - 2];
-            instr2 = link->instrArr[INSTR_SIZE - 1];
+            // Check for consecutive clockwise and counterclockwise rotation of the same face
             if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
             {
-                link->instrArr[INSTR_SIZE - 2] = 'V';
-                link->instrArr[INSTR_SIZE - 1] = 'V';
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, INSTR_SIZE - 1, 2);
+                optimized = true;
+            }
+            
+            // Check for consectutive full rotation of a face
+            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
+            {
+                // shift the list to get rid of unneccesary instructions
+                shiftLL(link, INSTR_SIZE - 1, 4);
+                optimized = true;
             }
         }
         link = link->next;
+    }
+    
+    return optimized;
+}
+
+
+/**
+ * Shifts the array values of a link in a list and the values of all following link arrays
+ *
+ * @param link
+ * The link in which the shift begins
+ *
+ * @param index
+ * The index of the array of which to start the shift
+ */
+void shiftLL(InstructLink* link, int index, int shiftAmt)
+{
+    // Iterate through last link
+    while (link != NULL)
+    {
+        // Iterate from index to the end of the array
+        for (int i = index; i < INSTR_SIZE - shiftAmt; ++i)
+        {
+            if (link->instrArr[i] != (char)NULL)
+            {
+                link->instrArr[i] = link->instrArr[i + shiftAmt];
+            }
+            // Return from function if NULL char reached
+            else
+            {
+                return;
+            }
+        }
+        // For last items in array, replace with values from next link array
+        if (link->next != NULL)
+        {
+            for (int j = 0; j < shiftAmt; ++j)
+            {
+                link->instrArr[INSTR_SIZE - shiftAmt + j] = link->next->instrArr[j];
+            }
+        }
+        else
+        {
+            for (int j = 0; j < shiftAmt; ++j)
+            {
+                link->instrArr[INSTR_SIZE - shiftAmt + j] = (char)NULL;
+            }
+        }
+        
+        // Go to the next link
+        link = link->next;
+        index = 0;
     }
 }
 
@@ -1616,6 +1623,7 @@ void optimizeInstruct(InstructLink* head)
 void printInstruct(InstructLink* head, FILE* fp_instruct)
 {
     InstructLink* link = head;
+    printf("Printing to file...\n");
     
     // Iterate through each link
     while (link != NULL)
@@ -1627,11 +1635,6 @@ void printInstruct(InstructLink* head, FILE* fp_instruct)
             if (link->instrArr[i] == (char)NULL)
             {
                 return;
-            }
-            // Do not print voided instructions
-            if (link->instrArr[i] == 'V' || link->instrArr[i] == 'v')
-            {
-                continue;
             }
             // Print instruction
             fprintf(fp_instruct, "%c ", link->instrArr[i]);

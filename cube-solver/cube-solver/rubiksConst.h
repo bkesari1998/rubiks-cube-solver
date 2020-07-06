@@ -108,7 +108,7 @@
 #define DNE -1
 
 // Define instruction array size for linked list
-#define INSTR_SIZE 200
+#define INSTR_SIZE 50
 
 // Create const arrays for indexes in user input string that correspond to the color of each side
 extern const int X_INDEXES[];
