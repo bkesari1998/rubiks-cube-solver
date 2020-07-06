@@ -43,4 +43,5 @@ The program outputs two files which both include instructions to solve a Rubik's
 - z: rotate the cube around the z axis in the counterclockwise direction
 
 The cube axis are defined as follows:
+<br />
 ![alt text](Cube-Axis.png)
