@@ -1604,24 +1604,39 @@ void optimizeInstruct(InstructLink* head)
     }
 }
 
+/**
+ * Prints the instuctions to solve the cube from a linked list to a output file
+ *
+ * @param head
+ * Pointer to the first link in the linked list
+ *
+ * @param fp_instruct
+ * Pointer to the output file
+ */
 void printInstruct(InstructLink* head, FILE* fp_instruct)
 {
     InstructLink* link = head;
+    
+    // Iterate through each link
     while (link != NULL)
     {
+        // Iterate through each element in the array inside of the link
         for (int i = 0; i < INSTR_SIZE; ++i)
         {
+            // End process if all elements printed
             if (link->instrArr[i] == (char)NULL)
             {
                 return;
             }
+            // Do not print voided instructions
             if (link->instrArr[i] == 'V' || link->instrArr[i] == 'v')
             {
                 continue;
             }
+            // Print instruction
             fprintf(fp_instruct, "%c ", link->instrArr[i]);
         }
-        
+        // Point to the next link
         link = link->next;
     }
 }
