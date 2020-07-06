@@ -53,3 +53,8 @@ The program also outputs two files which both include instructions to solve a Ru
 The cube axes are defined as follows:
 <br />
 ![alt text](Cube-Axis.png)
+
+## Sources
+Cabezas, Victor. “Rubik-Solver.” PyPI, 14 Jan. 2019, www.pypi.org/project/rubik-solver/.
+<br/>
+“Rubik's 3x3 Solution Guide.” Rubik's 3x3 Solution Guide | Rubik's Official Website, Rubik's, www.rubiks.com/en-us/how-to-solve-rubiks-cube.
