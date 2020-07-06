@@ -1623,7 +1623,6 @@ void shiftLL(InstructLink* link, int index, int shiftAmt)
 void printInstruct(InstructLink* head, FILE* fp_instruct)
 {
     InstructLink* link = head;
-    printf("Printing to file...\n");
     
     // Iterate through each link
     while (link != NULL)

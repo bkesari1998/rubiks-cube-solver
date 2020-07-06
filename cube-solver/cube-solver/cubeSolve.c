@@ -1519,6 +1519,7 @@ void solveTopCorners(Cube* pCube)
     while(!(checkTopCornersSolved(pCube)))
     {
         orientCubeForTopCornerSwap(pCube);
+        printCube(pCube);
         
         rotateRightFace(pCube, false, true);
         rotateFrontFace(pCube, false, true);
@@ -1546,23 +1547,36 @@ void solveTopCorners(Cube* pCube)
  */
 void orientCubeForTopCornerSwap(Cube* pCube)
 {
-    while ((pCube->pieces[FRONT_RIGHT_TOP_CORNER].x != pCube->pieces[RIGHT_CENTER].x || pCube->pieces[FRONT_RIGHT_TOP_CORNER].y != pCube->pieces[FRONT_CENTER].y)
-           && (pCube->pieces[FRONT_LEFT_TOP_CORNER].x != pCube->pieces[LEFT_CENTER].x || pCube->pieces[FRONT_LEFT_TOP_CORNER].y != pCube->pieces[FRONT_CENTER].y)
-           && (pCube->pieces[BACK_RIGHT_TOP_CORNER].x != pCube->pieces[RIGHT_CENTER].x || pCube->pieces[BACK_RIGHT_TOP_CORNER].y != pCube->pieces[BACK_CENTER].y)
-           && (pCube->pieces[BACK_LEFT_TOP_CORNER].x != pCube->pieces[LEFT_CENTER].x || pCube->pieces[BACK_LEFT_TOP_CORNER].y != pCube->pieces[BACK_CENTER].y))
+    Piece corner1 = pCube->pieces[TOP_LEFT_BACK_CORNER];
+    Piece corner2 = pCube->pieces[TOP_RIGHT_BACK_CORNER];
+    Piece corner3 = pCube->pieces[TOP_RIGHT_FRONT_CORNER];
+    Piece corner4 = pCube->pieces[TOP_LEFT_FRONT_CORNER];
+    
+    Piece center1 = pCube->pieces[BACK_CENTER];
+    Piece center2 = pCube->pieces[RIGHT_CENTER];
+    Piece center3 = pCube->pieces[FRONT_CENTER];
+    Piece center4 = pCube->pieces[LEFT_CENTER];
+
+    
+    // Loop until two corners are in the correct position
+    while (!((corner1.x == center4.x && corner1.y == center1.y && ((corner2.x == center2.x && corner2.y == center1.y) || (corner3.x == center2.x && corner3.y == center3.y) || (corner4.x == center4.x && corner4.y == center3.y))) || (corner2.x == center2.x && corner2.y == center1.y && ((corner3.x == center2.x && corner3.y == center3.y) || (corner4.x == center4.x && corner4.y == center3.y))) || (corner3.x == center2.x && corner3.y == center3.y && corner4.x == center4.x && corner4.y == center3.y)))
     {
         rotateTopFace(pCube, true, true);
+        
+        corner1 = pCube->pieces[TOP_LEFT_BACK_CORNER];
+        corner2 = pCube->pieces[TOP_RIGHT_BACK_CORNER];
+        corner3 = pCube->pieces[TOP_RIGHT_FRONT_CORNER];
+        corner4 = pCube->pieces[TOP_LEFT_FRONT_CORNER];
     }
     
+    // Rotate Cube until two corners that are in place are located on the back face if orientation exists
     for (int i = 0; i < NUM_CENTER - 2; ++i)
     {
-        if ((pCube->pieces[TOP_RIGHT_FRONT_CORNER].x == pCube->pieces[RIGHT_CENTER].x)
-            && (pCube->pieces[TOP_RIGHT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y)
-            && (pCube->pieces[TOP_LEFT_FRONT_CORNER].x == pCube->pieces[LEFT_CENTER].x)
-            && (pCube->pieces[TOP_LEFT_FRONT_CORNER].y == pCube->pieces[FRONT_CENTER].y))
+        if ((pCube->pieces[TOP_RIGHT_BACK_CORNER].x == pCube->pieces[RIGHT_CENTER].x)
+            && (pCube->pieces[TOP_RIGHT_BACK_CORNER].y == pCube->pieces[BACK_CENTER].y)
+            && (pCube->pieces[TOP_LEFT_BACK_CORNER].x == pCube->pieces[LEFT_CENTER].x)
+            && (pCube->pieces[TOP_LEFT_BACK_CORNER].y == pCube->pieces[BACK_CENTER].y))
         {
-            turnZ(pCube, true);
-            turnZ(pCube, true);
             return;
         }
         turnZ(pCube, true);
