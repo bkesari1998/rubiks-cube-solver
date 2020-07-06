@@ -46,9 +46,9 @@ The program also outputs two files which both include instructions to solve a Ru
 - X: rotate the cube around the X axis in the clockwise direction
 - x: rotate the cube around the X axis in the counterclockwise direction
 - Y: rotate the cube around the Y axis in the clockwise direction
-- y: rotate the cube around the y axis in the counterclockwise direction
+- y: rotate the cube around the Y axis in the counterclockwise direction
 - Z: rotate the cube around the Z axis in the clockwise direction
-- z: rotate the cube around the z axis in the counterclockwise direction
+- z: rotate the cube around the Z axis in the counterclockwise direction
 
 The cube axes are defined as follows:
 <br />
