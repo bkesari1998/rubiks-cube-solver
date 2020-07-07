@@ -1701,8 +1701,17 @@ void printInstruct(InstructLink* head, FILE* fp_instruct)
             // Print instruction
             fprintf(fp_instruct, "%c ", link->instrArr[i]);
         }
-        // Point to the next link
-        link = link->next;
+        // Point to the next link and free memory for current link
+        if (link->next != NULL)
+        {
+            link = link->next;
+            free(link->prev);
+        }
+        else
+        {
+            free(link);
+            break;
+        }
     }
 }
 
