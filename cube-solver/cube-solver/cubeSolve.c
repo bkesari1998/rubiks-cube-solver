@@ -1653,10 +1653,11 @@ void orientCubeForTopEdgeSolve(Cube* pCube)
             if (pCube->pieces[BACK_POS[j]].y != pCube->pieces[BACK_CENTER].y)
             {
                 turnZ(pCube, true);
+                printCube(pCube);
                 break;
             }
             // Return to caller if back face is completely solved
-            if (i == NUM_PIECES_IN_ROW - 1)
+            if (j == NUM_PIECES_IN_ROW - 1)
             {
                 return;
             }

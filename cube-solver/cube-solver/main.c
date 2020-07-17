@@ -39,7 +39,6 @@ int main(int argc, const char * argv[]) {
     createCube(&rubiks, colorArr);
     printCube(&rubiks);
     
-
     // Solve cube
     solveFirstLayerCross(&rubiks);
     printCube(&rubiks);
@@ -55,19 +54,15 @@ int main(int argc, const char * argv[]) {
     printCube(&rubiks);
     solveTopEdges(&rubiks);
     printCube(&rubiks);
-
     // Optimize the instructions by removing redundant moves
     do
     {
         optimizeInstruct((InstructLink*)head);
     }
     while (optimizeInstruct((InstructLink*)head));
-    
     // Write to the instructions file
     printInstruct((InstructLink*)head, fp_instruct);
-    
-
-    
+        
     // Close instuction files
     fclose(fp_instruct);
     

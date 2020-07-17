@@ -53,6 +53,7 @@ void getColors(char* colorArr)
         else
         {
             printf("Invalid input.\n");
+            printf("Invalid char: %c\n", ch);
             exit(1);
         }
         
@@ -83,6 +84,7 @@ void getColors(char* colorArr)
         || numRed != 9 || numBlue != 9 || numGreen != 9)
     {
         printf("Invalid input.\n");
+        printf("W: %d Y: %d O: %d R: %d B: %d G: %d\n", numWhite, numYellow, numOrange, numRed, numBlue, numGreen);
         exit(1);
     }
     
@@ -92,6 +94,7 @@ void getColors(char* colorArr)
     if (ch != '\n')
     {
         printf("Invalid input.\n");
+        printf("Input is too long\n");
         exit(1);
     }
     
