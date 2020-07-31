@@ -102,7 +102,7 @@
 		BF4E37C324AEE7B40033C99A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = "Bharat Kesari";
 				TargetAttributes = {
 					BF4E37CA24AEE7B40033C99A = {
@@ -254,6 +254,7 @@
 		BF4E37D324AEE7B40033C99A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -262,6 +263,7 @@
 		BF4E37D424AEE7B40033C99A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
