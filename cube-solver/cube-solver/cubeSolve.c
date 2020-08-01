@@ -6,11 +6,6 @@
 //  Copyright © 2020 Bharat Kesari. All rights reserved.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include "rubiksConst.h"
-#include "cubeUtils.h"
 #include "cubeSolve.h"
 
 // Cube solving functions

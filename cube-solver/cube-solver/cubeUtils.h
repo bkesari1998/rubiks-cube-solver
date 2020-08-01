@@ -9,8 +9,17 @@
 #ifndef cubeUtils_h
 #define cubeUtils_h
 
+// Libraries and header files
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include "rubiksDef.h"
+#include "vectors.h"
+
 // Global linked list pointer
 extern InstructLink* instrList;
+extern VECTOR hVector;
 
 // User input fuctions
 void getColors(char* colorArr);

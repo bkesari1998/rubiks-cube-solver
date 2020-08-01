@@ -9,13 +9,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "rubiksConst.h"
-#include "cubeUtils.h"
 #include "cubeSolve.h"
-#include "globalVars.h"
+#include "rubiksDefAssignments.h"
 
 FILE* fp_instruct = NULL;
 InstructLink* instrList = NULL;
+VECTOR hVector = NULL;
 
 int main(int argc, const char * argv[]) {
     char colorArr[NUM_SQUARES];
@@ -23,6 +22,8 @@ int main(int argc, const char * argv[]) {
 
     instrList = createNextLink(instrList);
     const InstructLink* head = instrList;
+    
+    hVector = vector_init();
     
     // Open empty instruction file for reading and writing
     fp_instruct = fopen("/Users/bharatkesari/Documents/Rubiks-Cube-Solver/rubiks-cube-solver/cube-solver/cube-solver/instr.txt", "w+");

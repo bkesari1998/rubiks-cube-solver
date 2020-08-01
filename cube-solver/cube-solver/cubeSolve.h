@@ -9,6 +9,12 @@
 #ifndef cubeSolve_h
 #define cubeSolve_h
 
+// Libraries and header files
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include "cubeUtils.h"
+
 // First layer cross functions
 void solveFirstLayerCross(Cube* pCube);
 void locateFirstLayerEdges(Cube* pCube, Piece edgePieces[], Color edgeColor);

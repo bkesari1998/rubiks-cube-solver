@@ -6,17 +6,12 @@
 //  Copyright © 2020 Bharat Kesari. All rights reserved.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <ctype.h>
-#include "rubiksConst.h"
 #include "cubeUtils.h"
 
+// Global file pointer defined in main
 extern FILE* fp_instruct;
 
 // User input functions
-
 /**
  * Gathers user input of color abbreviations and stores the input in a character array.
  * Makes sure that user input is of proper length and contains allowable values.

@@ -1,13 +1,13 @@
 //
-//  rubiksConst.h
+//  rubiksDef.h
 //  cube-solver
 //
-//  Created by Bharat Kesari on 7/3/20.
+//  Created by Bharat Kesari on 7/31/20.
 //  Copyright © 2020 Bharat Kesari. All rights reserved.
 //
 
-#ifndef rubiksConst_h
-#define rubiksConst_h
+#ifndef rubiksDef_h
+#define rubiksDef_h
 
 // Constants and definitions
 
@@ -104,54 +104,54 @@
 #define BOTTOM_FRONT_EDGE 24
 #define BOTTOM_RIGHT_FRONT_CORNER 25
 
-// Define DNE constant for arrays
+// Define DNE constant for int arrays
 #define DNE -1
 
 // Define instruction array size for linked list
 #define INSTR_SIZE 50
 
 // Create const arrays for indexes in user input string that correspond to the color of each side
-extern const int X_INDEXES[];
+extern const int X_INDEXES[26];
 
-extern const int Y_INDEXES[];
+extern const int Y_INDEXES[26];
 
-extern const int Z_INDEXES[];
+extern const int Z_INDEXES[26];
 
 // Corner piece indexes in pieces[] of a Cube struct
-extern const int CORNER_POS[];
+extern const int CORNER_POS[8];
 
 // Center piece indexes in pieces[] of a Cube struct
-extern const int CENTER_POS[];
+extern const int CENTER_POS[6];
 
 // Edge piece indexes in pieces[] of a Cube struct
-extern const int EDGE_POS[];
+extern const int EDGE_POS[12];
 
 // Front face piece indexes in pieces[] of a Cube struct
-extern const int FRONT_POS[];
+extern const int FRONT_POS[9];
 
 // Back face piece indexes in pieces[] of a Cube struct
-extern const int BACK_POS[];
+extern const int BACK_POS[9];
 
 // Right face piece indexes in pieces[] of a Cube struct
-extern const int RIGHT_POS[];
+extern const int RIGHT_POS[9];
 
 // Left face piece indexes in pieces[] of a Cube struct
-extern const int LEFT_POS[];
+extern const int LEFT_POS[9];
 
 // Top face piece indexes in pieces[] of a Cube struct
-extern const int TOP_POS[];
+extern const int TOP_POS[9];
 
 // Bottom face piece indexes in pieces[] of a Cube struct
-extern const int BOTTOM_POS[];
+extern const int BOTTOM_POS[9];
 
 // Middle Layer perpendicular to x piece indexes in pieces[] of a Cube struct
-extern const int X_MID[];
+extern const int X_MID[9];
 
 // Middle Layer perpendicular to y piece indexes in pieces[] of a Cube struct
-extern const int Y_MID[];
+extern const int Y_MID[9];
 
 // Middle Layer perpendicular to z piece indexes in pieces[] of a Cube struct
-extern const int Z_MID[];
+extern const int Z_MID[9];
 
 // Enumerations and structures
 
@@ -210,4 +210,4 @@ typedef struct instructLink {
     struct instructLink* next;
 } InstructLink;
 
-#endif /* rubiksConst.h */
+#endif /* rubiksDef_h */
