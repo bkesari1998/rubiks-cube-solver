@@ -2,6 +2,29 @@
 This is a C program that solves a Rubik's Cube and outputs the instructions used to solve the Cube.
 
 ## Usage
+### Compilation
+The program is compiled using GCC. Copy the rubiks-cube-solver/cube-solver/cube-solver/ directory and navigate to the directory in a bash terminal. Execute the folowing command:
+<br />
+``$ make``
+<br />
+<br />
+The terminal output should be:
+<br />
+``gcc -Wall --std=c99 -c main.c -o main.o``
+<br />
+``gcc -Wall --std=c99 -c cubeSolve.c -o cubeSolve.o``
+<br />
+``gcc -Wall --std=c99 -c cubeUtils.c -o cubeUtils.o``
+<br />
+``gcc -Wall --std=c99 -c vectors.c -o vectors.o``
+<br />
+``gcc -Wall --std=c99 -o cube_solver main.o cubeSolve.o cubeUtils.o vectors.o``
+<br />
+<br />
+To run the program, execute the following command:
+<br />
+``$ ./cube_solver``
+
 ### Inputs
 The user enters a string into the terminal which coresponds to the colors on each square of a Rubiks cube. The string is a series of single letter color abbreiviations. The abbreviations are:
 
