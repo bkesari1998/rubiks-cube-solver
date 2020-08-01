@@ -24,6 +24,11 @@ The terminal output should be:
 To run the program, execute the following command:
 <br />
 ``$ ./cube_solver``
+<br /> 
+<br />
+To remove the output files and executable file from the directory, execute the following command:
+<br />
+``$ make clean``
 
 ### Inputs
 The user enters a string into the terminal which coresponds to the colors on each square of a Rubiks cube. The string is a series of single letter color abbreiviations. The abbreviations are:
