@@ -13,16 +13,15 @@
 #include "rubiksDefAssignments.h"
 
 FILE* fp_instruct = NULL;
-InstructLink* instrList = NULL;
 VECTOR hVector = NULL;
 
 int main(int argc, const char * argv[]) {
+    
+    // Create references to colors array and Cube object
     char colorArr[NUM_SQUARES];
     Cube rubiks;
-
-    instrList = createNextLink(instrList);
-    const InstructLink* head = instrList;
     
+    // Initialized vector to hold the instructions array
     hVector = vector_init();
     
     // Open empty instruction file for reading and writing
@@ -55,15 +54,12 @@ int main(int argc, const char * argv[]) {
     printCube(&rubiks);
     solveTopEdges(&rubiks);
     printCube(&rubiks);
-    // Optimize the instructions by removing redundant moves
-    do
-    {
-        optimizeInstruct((InstructLink*)head);
-    }
-    while (optimizeInstruct((InstructLink*)head));
-    // Write to the instructions file
-    printInstruct((InstructLink*)head, fp_instruct);
-        
+    
+    optimizeInstructions();
+    vector_print_data(hVector, fp_instruct);
+    
+    vector_destroy(&hVector);
+    
     // Close instuction files
     fclose(fp_instruct);
     

@@ -494,20 +494,15 @@ void rotateFrontFace(Cube* pCube, bool isCntr, bool outputInstruct)
     // Output instruction if indicated
     if (outputInstruct)
     {
-        // Create new link if neccessary
-        if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-        {
-            instrList = createNextLink(instrList);
-        }
         // Output CC instruction
         if (isCntr)
         {
-            instrList->instrArr[instrList->instr_index++] = 'f';
+            vector_append_item(hVector, 'f');
         }
         // Output Clck instruction
         else
         {
-            instrList->instrArr[instrList->instr_index++] = 'F';
+            vector_append_item(hVector, 'F');
         }
     }
 }
@@ -581,20 +576,15 @@ void rotateBackFace(Cube* pCube, bool isCntr, bool outputInstruct)
      // Output instruction if indicated
     if (outputInstruct)
     {
-        // Create new link if neccessary
-        if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-        {
-            instrList = createNextLink(instrList);
-        }
         // Output CC instruction
         if (isCntr)
         {
-            instrList->instrArr[instrList->instr_index++] = 'B';
+            vector_append_item(hVector, 'B');
         }
         // Output Clck instruction
         else
         {
-            instrList->instrArr[instrList->instr_index++] = 'b';
+            vector_append_item(hVector, 'b');
         }
     }
 }
@@ -668,20 +658,15 @@ void rotateLeftFace(Cube* pCube, bool isCntr, bool outputInstruct)
     // Output instruction if indicated
     if (outputInstruct)
     {
-        // Create new link if neccessary
-        if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-        {
-            instrList = createNextLink(instrList);
-        }
         // Output CC instruction
         if (isCntr)
         {
-            instrList->instrArr[instrList->instr_index++] = 'l';
+            vector_append_item(hVector, 'l');
         }
         // Output Clck instruction
         else
         {
-            instrList->instrArr[instrList->instr_index++] = 'L';
+            vector_append_item(hVector, 'L');
         }
     }
 }
@@ -755,20 +740,15 @@ void rotateRightFace(Cube* pCube, bool isCntr, bool outputInstruct)
     // Output instruction if indicated
     if (outputInstruct)
     {
-        // Create new link if neccessary
-        if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-        {
-            instrList = createNextLink(instrList);
-        }
         // Output CC instruction
         if (isCntr)
         {
-            instrList->instrArr[instrList->instr_index++] = 'R';
+            vector_append_item(hVector, 'R');
         }
         // Output Clck instruction
         else
         {
-            instrList->instrArr[instrList->instr_index++] = 'r';
+            vector_append_item(hVector, 'r');
         }
     }
 }
@@ -842,20 +822,15 @@ void rotateTopFace(Cube* pCube, bool isCntr, bool outputInstruct)
     // Output instruction if indicated
     if (outputInstruct)
     {
-        // Create new link if neccessary
-        if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-        {
-            instrList = createNextLink(instrList);
-        }
         // Output CC instruction
         if (isCntr)
         {
-            instrList->instrArr[instrList->instr_index++] = 'u';
+            vector_append_item(hVector, 'u');
         }
         // Output Clck instruction
         else
         {
-            instrList->instrArr[instrList->instr_index++] = 'U';
+            vector_append_item(hVector, 'U');
         }
     }
 }
@@ -929,20 +904,15 @@ void rotateBottomFace(Cube* pCube, bool isCntr, bool outputInstruct)
     // Output instruction if indicated
     if (outputInstruct)
     {
-        // Create new link if neccessary
-        if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-        {
-            instrList = createNextLink(instrList);
-        }
         // Output CC instruction
         if (isCntr)
         {
-            instrList->instrArr[instrList->instr_index++] = 'D';
+            vector_append_item(hVector, 'D');
         }
         // Output Clck instruction
         else
         {
-            instrList->instrArr[instrList->instr_index++] = 'd';
+            vector_append_item(hVector, 'd');
         }
     }
 }
@@ -1191,21 +1161,15 @@ void turnX(Cube* pCube, bool isCntr)
     rotateMidX(pCube, isCntr);
     rotateRightFace(pCube, isCntr, false);
     
-
-    // Create new link if neccessary
-    if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-    {
-        instrList = createNextLink(instrList);
-    }
     // Output CC instruction
     if (isCntr)
     {
-        instrList->instrArr[instrList->instr_index++] = 'x';
+        vector_append_item(hVector, 'x');
     }
     // Output Clck instruction
     else
     {
-        instrList->instrArr[instrList->instr_index++] = 'X';
+        vector_append_item(hVector, 'X');
     }
 }
 
@@ -1224,21 +1188,16 @@ void turnY(Cube* pCube, bool isCntr)
     rotateFrontFace(pCube, isCntr, false);
     rotateMidY(pCube, isCntr);
     rotateBackFace(pCube, isCntr, false);
-    
-    // Create new link if neccessary
-    if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-    {
-        instrList = createNextLink(instrList);
-    }
+
     // Output CC instruction
     if (isCntr)
     {
-        instrList->instrArr[instrList->instr_index++] = 'y';
+        vector_append_item(hVector, 'y');
     }
     // Output Clck instruction
     else
     {
-        instrList->instrArr[instrList->instr_index++] = 'Y';
+        vector_append_item(hVector, 'Y');
     }
 }
 
@@ -1258,20 +1217,15 @@ void turnZ(Cube* pCube, bool isCntr)
     rotateMidZ(pCube, isCntr);
     rotateBottomFace(pCube, isCntr, false);
     
-    // Create new link if neccessary
-    if (instrList == NULL || instrList->instr_index >= INSTR_SIZE)
-    {
-        instrList = createNextLink(instrList);
-    }
     // Output CC instruction
     if (isCntr)
     {
-        instrList->instrArr[instrList->instr_index++] = 'z';
+        vector_append_item(hVector, 'z');
     }
     // Output Clck instruction
     else
     {
-        instrList->instrArr[instrList->instr_index++] = 'Z';
+        vector_append_item(hVector, 'Z');
     }
 }
 
@@ -1370,347 +1324,135 @@ void rotateMatClck(Piece face[NUM_PIECES_IN_ROW][NUM_PIECES_IN_ROW])
     rotateMatCntr(face);
 }
 
-// Linked list functions
-
-/**
- * Creates the next link in the instructions linked list
- *
- * @param prev
- * Pointer to the previous link in the list
- */
-InstructLink* createNextLink(InstructLink* prev)
-{
-    // Allocate memory for new link
-    InstructLink* link = (InstructLink*) malloc (sizeof(InstructLink) + 1);
-    
-    // Initialize the link
-    initLink(link);
-
-    // Add the new link to the list
-    if (prev != NULL)
-    {
-        prev->next = link;
-        link->prev=prev;
-        link->linkNo=prev->linkNo + 1;
-    }
-    return link;
-}
-
-/**
- * Initializes a link to NULL and zero values
- *
- * @param link
- * Pointer to the link to be initialized
- */
-void initLink(InstructLink* link)
-{
-    link->prev = NULL;
-    link->next = NULL;
-    link->instr_index = 0;
-    link->linkNo = 1;
-    for (int i = 0 ; i < INSTR_SIZE; i++)
-    {
-        link->instrArr[i] = (char)NULL;
-    }
-}
+// Instructions optimization functions
 
 /**
  * Optimizes the cube solving instructions by 'removing' any successive instructions to rotate a face and rotate it back or to rotate a face 4 rotations in the same direction
  *
- * @param head
- * Pointer to the first link in the instructions linked list
+ * @return
+ * Returns true if any optimization was executed by the function
+ * Returns false if the instructions remained the same
  */
-bool optimizeInstruct(InstructLink* head)
+bool optimizeInstructions(void)
 {
-    InstructLink* link = head;
+    // Boolean value to return
     bool optimized = false;
     
-    // Iterate through last link
-    while (link != NULL)
+    // Counter varaible for while loop
+    int counter = 0;
+
+    // Loop for every group of four instructions in the Vector
+    while (counter < vector_get_size(hVector) - 3)
     {
-        // Instructions will be processed in groups of 4
-        char instr1;
-        char instr2;
-        char instr3;
-        char instr4;
+        // Get four consecutive instructions
+        char instr_1 = vector_pop_item(hVector, counter);
+        char instr_2 = vector_pop_item(hVector, counter + 1);
+        char instr_3 = vector_pop_item(hVector, counter + 2);
+        char instr_4 = vector_pop_item(hVector, counter + 3);
         
-        // Iterate through 4th to last element in the array within a link
-        for (int i = 0; i < INSTR_SIZE - 3; ++i)
+        // Check if all four instructions are identical
+        if (instr_1 == instr_2 && instr_1 == instr_3 && instr_1 == instr_4)
         {
-            // Assign instr to consecutive values in the array
-            instr1 = link->instrArr[i];
-            instr2 = link->instrArr[i + 1];
-            instr3 = link->instrArr[i + 2];
-            instr4 = link->instrArr[i + 3];
+            // Set boolean variable
+            optimized = true;
             
-            // Return from function if last instruction reached
-            if (instr1 == (char)NULL)
-            {
-                return optimized;
-            }
+            // Remove the unneccessary instructions
+            vector_remove_item(hVector, counter);
+            vector_remove_item(hVector, counter);
+            vector_remove_item(hVector, counter);
+            vector_remove_item(hVector, counter);
             
-            // Check for consecutive clockwise and counterclockwise rotation of the same face
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, i, 2);
-                optimized = true;
-            }
-            
-            // Check for consectutive full rotation of a face
-            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, i, 4);
-                optimized = true;
-            }
-            
-            // Check for three consecutive turns of one face in the same direction
-            if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[i] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[i] = toupper(instr1);
-                }
-                shiftLL(link, i + 1, 2);
-                optimized = true;
-            }
+            continue;
         }
         
-        // Check the last elements of array with the first elements of the next link array
-        if (link->next != NULL)
+        // Check if consecutive instructions are redundant
+        if ((instr_1 != instr_2) && (toupper(instr_1) == toupper(instr_2)))
         {
-            // Assign instr to consecutive values in the array
-            instr1 = link->instrArr[INSTR_SIZE - 3];
-            instr2 = link->instrArr[INSTR_SIZE - 2];
-            instr3 = link->instrArr[INSTR_SIZE - 1];
-            instr4 = link->next->instrArr[0];
+            // Set boolean variable
+            optimized = true;
             
-            // Return from fuction if last instruction reached
-            if (instr1 == (char)NULL)
-            {
-                return optimized;
-            }
+            // Remove unneccessary instructions
+            vector_remove_item(hVector, counter);
+            vector_remove_item(hVector, counter);
             
-            // Check for consecutive clockwise and counterclockwise rotation of the same face
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, INSTR_SIZE - 3, 2);
-                optimized = true;
-            }
-            
-            // Check for consectutive full rotation of a face
-            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, INSTR_SIZE - 3, 4);
-                optimized = true;
-            }
-            
-            // Check for three consecutive turns of one face in the same direction
-            if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 3] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 3] = toupper(instr1);
-                }
-                
-                shiftLL(link, INSTR_SIZE - 2, 2);
-                optimized = true;
-            }
-            
-            // Assign instr to consecutive values in the array
-            instr1 = link->instrArr[INSTR_SIZE - 2];
-            instr2 = link->instrArr[INSTR_SIZE - 1];
-            instr3 = link->next->instrArr[0];
-            instr4 = link->next->instrArr[1];
-            
-            // Return from function if last instruction reached
-            if (instr1 == (char)NULL)
-            {
-                return optimized;
-            }
-            
-            // Check for consecutive clockwise and counterclockwise rotation of the same face
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, INSTR_SIZE - 2, 2);
-                optimized = true;
-            }
-            
-            // Check for consectutive full rotation of a face
-            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, INSTR_SIZE - 2, 4);
-                optimized = true;
-            }
-            
-            // Check for three consecutive turns of one face in the same direction
-            if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 2] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 2] = toupper(instr1);
-                }
-                
-                shiftLL(link, INSTR_SIZE - 1, 2);
-                optimized = true;
-            }
-            
-            // Assign instr to consecutive values in the array
-            instr1 = link->instrArr[INSTR_SIZE - 1];
-            instr2 = link->next->instrArr[0];
-            instr3 = link->next->instrArr[1];
-            instr4 = link->next->instrArr[2];
-            
-            // Return from function if last instruction reached
-            if (instr1 == (char)NULL)
-            {
-                return optimized;
-            }
-            
-            // Check for consecutive clockwise and counterclockwise rotation of the same face
-            if ((instr1 != instr2) && (toupper(instr1) == toupper(instr2)))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, INSTR_SIZE - 1, 2);
-                optimized = true;
-            }
-            
-            // Check for consectutive full rotation of a face
-            if ((instr1 == instr2) && (instr1 == instr3) && (instr3 == instr4))
-            {
-                // shift the list to get rid of unneccesary instructions
-                shiftLL(link, INSTR_SIZE - 1, 4);
-                optimized = true;
-            }
-            
-            // Check for three consecutive turns of one face in the same direction
-            if ((instr1 == instr2) && (instr1 == instr3))
-            {
-                if (isupper(instr1))
-                {
-                    link->instrArr[INSTR_SIZE - 2] = tolower(instr1);
-                }
-                else
-                {
-                    link->instrArr[INSTR_SIZE - 2] = toupper(instr1);
-                }
-                
-                shiftLL(link->next, 0, 2);
-                optimized = true;
-            }
+            continue;
         }
-        link = link->next;
-    }
-    
-    return optimized;
-}
-
-
-/**
- * Shifts the array values of a link in a list and the values of all following link arrays
- *
- * @param link
- * The link in which the shift begins
- *
- * @param index
- * The index of the array of which to start the shift
- */
-void shiftLL(InstructLink* link, int index, int shiftAmt)
-{
-    // Iterate through last link
-    while (link != NULL)
-    {
-        // Iterate from index to the end of the array
-        for (int i = index; i < INSTR_SIZE - shiftAmt; ++i)
+        
+        // Check for three rotatations of the same face in the same direction
+        if (instr_1 == instr_2 && instr_1 == instr_3)
         {
-            if (link->instrArr[i] != (char)NULL)
+            optimized = true;
+            
+            // Remove unneccessary instructions
+            vector_remove_item(hVector, counter + 1);
+            vector_remove_item(hVector, counter + 1);
+            
+            // Flip direction of first instruction in group
+            if (islower(instr_1))
             {
-                link->instrArr[i] = link->instrArr[i + shiftAmt];
+                vector_replace_item(hVector, counter, toupper(instr_1));
             }
-            // Return from function if NULL char reached
             else
             {
-                return;
+                vector_replace_item(hVector, counter, tolower(instr_1));
             }
-        }
-        // For last items in array, replace with values from next link array
-        if (link->next != NULL)
-        {
-            for (int j = 0; j < shiftAmt; ++j)
-            {
-                link->instrArr[INSTR_SIZE - shiftAmt + j] = link->next->instrArr[j];
-            }
-        }
-        else
-        {
-            for (int j = 0; j < shiftAmt; ++j)
-            {
-                link->instrArr[INSTR_SIZE - shiftAmt + j] = (char)NULL;
-            }
+            
+            continue;
         }
         
-        // Go to the next link
-        link = link->next;
-        index = 0;
+        // Increase counter
+        counter++;
     }
-}
-
-/**
- * Prints the instuctions to solve the cube from a linked list to a output file
- *
- * @param head
- * Pointer to the first link in the linked list
- *
- * @param fp_instruct
- * Pointer to the output file
- */
-void printInstruct(InstructLink* head, FILE* fp_instruct)
-{
-    InstructLink* link = head;
     
-    // Iterate through each link
-    while (link != NULL)
+    // Edge cases
+    char instr_1 = vector_pop_item(hVector, vector_get_size(hVector) - 3);
+    char instr_2 = vector_pop_item(hVector, vector_get_size(hVector) - 2);
+    char instr_3 = vector_pop_item(hVector, vector_get_size(hVector) - 1);
+    
+    // Check if consecutive instructions are redundant
+    if ((instr_1 != instr_2) && (toupper(instr_1) == toupper(instr_2)))
     {
-        // Iterate through each element in the array inside of the link
-        for (int i = 0; i < INSTR_SIZE; ++i)
+        // Set boolean variable
+        optimized = true;
+        
+        // Remove unneccessary instructions
+        vector_remove_item(hVector, counter);
+        vector_remove_item(hVector, counter);
+    }
+    
+    // Check for three rotatations of the same face in the same direction
+    if (instr_1 == instr_2 && instr_1 == instr_3)
+    {
+        // Remove unneccessary instructions
+        vector_remove_item(hVector, counter + 1);
+        vector_remove_item(hVector, counter + 1);
+        
+        // Flip direction of first instruction in group
+        if (islower(instr_1))
         {
-            // End process if all elements printed
-            if (link->instrArr[i] == (char)NULL)
-            {
-                return;
-            }
-            // Print instruction
-            fprintf(fp_instruct, "%c ", link->instrArr[i]);
-        }
-        // Point to the next link and free memory for current link
-        if (link->next != NULL)
-        {
-            link = link->next;
-            free(link->prev);
+            vector_replace_item(hVector, counter, toupper(instr_1));
         }
         else
         {
-            free(link);
-            break;
+            vector_replace_item(hVector, counter, tolower(instr_1));
         }
     }
+    
+    instr_1 = vector_pop_item(hVector, vector_get_size(hVector) - 2);
+    instr_2 = vector_pop_item(hVector, vector_get_size(hVector) - 1);
+    
+    // Check if consecutive instructions are redundant
+    if ((instr_1 != instr_2) && (toupper(instr_1) == toupper(instr_2)))
+    {
+        // Set boolean variable
+        optimized = true;
+        
+        // Remove unneccessary instructions
+        vector_remove_item(hVector, counter);
+        vector_remove_item(hVector, counter);
+    }
+
+    return optimized;
 }
 
 // Cube printing functions

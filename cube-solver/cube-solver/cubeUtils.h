@@ -17,8 +17,7 @@
 #include "rubiksDef.h"
 #include "vectors.h"
 
-// Global linked list pointer
-extern InstructLink* instrList;
+// Global vector object
 extern VECTOR hVector;
 
 // User input fuctions
@@ -57,6 +56,8 @@ void initLink (InstructLink* link);
 bool optimizeInstruct(InstructLink* head);
 void printInstruct(InstructLink* head, FILE* fp_instruct);
 void shiftLL(InstructLink* link, int index, int shiftAmt);
+
+bool optimizeInstructions(void);
 
 // Cube printing
 void printCube(Cube* pCube);
