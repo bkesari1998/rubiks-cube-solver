@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
     hVector = vector_init();
     
     // Open empty instruction file for reading and writing
-    fp_instruct = fopen("/Users/bharatkesari/Documents/Rubiks-Cube-Solver/rubiks-cube-solver/cube-solver/cube-solver/instr.txt", "w+");
+    fp_instruct = fopen("/Users/bharatkesari/Documents/rubiks-cube-solver/cube-solver/cube-solver/instr.txt", "w+");
     
     // Check that file opened correctly, exit function if file opened incorrectly
     if (fp_instruct == NULL)

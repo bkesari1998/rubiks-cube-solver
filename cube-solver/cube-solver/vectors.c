@@ -1,11 +1,11 @@
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 #include "vectors.h"
 
 struct vector {
-	int size;
-	int capacity;
-	char* data;
+    int size;
+    int capacity;
+    char* data;
 };
 typedef struct vector Vector;
 
@@ -17,32 +17,32 @@ typedef struct vector Vector;
  */
 VECTOR vector_init(void)
 {
-	// Allocate memory for a Vector object
-	Vector* pVector = (Vector*)malloc(sizeof(VECTOR));
-	
-	// Execute if pVector allocation successful
-	if (pVector != NULL)
-	{
-		// Initialize size and capacity
-		pVector->size = 0;
-		pVector->capacity = 10;
-		
-		// Allocate memory for data array
-		pVector->data = (char*)malloc(sizeof(char) * (pVector->capacity));
-		
-		// Return NULL pointer if data memory allocation unsuccessful
-		if (pVector->data == NULL)
-		{
-			return NULL;
+    // Allocate memory for a Vector object
+    Vector* pVector = (Vector*)malloc(sizeof(VECTOR));
+    
+    // Execute if pVector allocation successful
+    if (pVector != NULL)
+    {
+        // Initialize size and capacity
+        pVector->size = 0;
+        pVector->capacity = 10;
+        
+        // Allocate memory for data array
+        pVector->data = (char*)malloc(sizeof(char) * (pVector->capacity));
+        
+        // Return NULL pointer if data memory allocation unsuccessful
+        if (pVector->data == NULL)
+        {
+            return NULL;
 
-		}
+        }
 
-		// Return VECTOR pointer if object creation successful
-		return (VECTOR)pVector;
-	}
-	
-	// Return NULL if object creation unsuccessful
-	return NULL;
+        // Return VECTOR pointer if object creation successful
+        return (VECTOR)pVector;
+    }
+    
+    // Return NULL if object creation unsuccessful
+    return NULL;
 }
 
 /**
@@ -53,28 +53,28 @@ VECTOR vector_init(void)
  */
 void vector_destroy(VECTOR* phVector)
 {
-	Vector* pVector = (Vector*) *phVector;
-	
-	// Execute if pVector != NULL
-	if (pVector != NULL)
-	{
-		// Execute if data != NULL
-		if (pVector->data != NULL)
-		{
-			// Free data
-			free(pVector->data);
-		}
-		
-		// Free pVector
-		free(pVector);
+    Vector* pVector = (Vector*) *phVector;
+    
+    // Execute if pVector != NULL
+    if (pVector != NULL)
+    {
+        // Execute if data != NULL
+        if (pVector->data != NULL)
+        {
+            // Free data
+            free(pVector->data);
+        }
+        
+        // Free pVector
+        free(pVector);
 
-		// Set phVector to NULL
-		phVector = NULL;
-		
-		return;
-	}
-	
-	return;
+        // Set phVector to NULL
+        phVector = NULL;
+        
+        return;
+    }
+    
+    return;
 }
 
 /**
@@ -88,32 +88,32 @@ void vector_destroy(VECTOR* phVector)
  */
 void vector_append_item(VECTOR hVector, char item)
 {
-	Vector* pVector = (Vector*)hVector;
-	
-	// Execute if pVector != NULL
-	if (pVector != NULL)
-	{
-		// Execute if data != NULL
-		if (pVector->data != NULL)
-		{
-			// Check that data has enough space
-			if (pVector->size >= pVector->capacity)
-			{
-				pVector->capacity *= 2;
-				pVector->data = (char*)realloc(pVector->data, sizeof(char) * pVector->capacity);
-			}
-			
-			// Append the number to the array
-			pVector->data[pVector->size] = item;
-			pVector->size += 1;
-			return;
-		}
-
-	}
+    Vector* pVector = (Vector*)hVector;
     
-	// Output error message if append failed
-	fprintf(stderr, "Could not append num.\n");
-	return;
+    // Execute if pVector != NULL
+    if (pVector != NULL)
+    {
+        // Execute if data != NULL
+        if (pVector->data != NULL)
+        {
+            // Check that data has enough space
+            if (pVector->size >= pVector->capacity)
+            {
+                pVector->capacity *= 2;
+                pVector->data = (char*)realloc(pVector->data, sizeof(char) * pVector->capacity);
+            }
+            
+            // Append the number to the array
+            pVector->data[pVector->size] = item;
+            pVector->size += 1;
+            return;
+        }
+
+    }
+    
+    // Output error message if append failed
+    fprintf(stderr, "Could not append num.\n");
+    return;
 }
 
 /**
@@ -131,7 +131,7 @@ void vector_append_item(VECTOR hVector, char item)
 void vector_replace_item(VECTOR hVector, unsigned int index,  char item)
 {
 
-	 Vector* pVector = (Vector*)hVector;
+     Vector* pVector = (Vector*)hVector;
 
     // Execute if pVector != NULL
     if (pVector != NULL)
@@ -167,7 +167,7 @@ void vector_replace_item(VECTOR hVector, unsigned int index,  char item)
  */
 void vector_insert_item(VECTOR hVector, unsigned int index, char item)
 {
- 	Vector* pVector = (Vector*)hVector;
+     Vector* pVector = (Vector*)hVector;
 
     // Execute if pVector != NULL
     if (pVector != NULL)
@@ -214,16 +214,16 @@ void vector_insert_item(VECTOR hVector, unsigned int index, char item)
  */
 int vector_get_size(VECTOR hVector)
 {
-	Vector* pVector = (Vector*)hVector;
-	
-	if (pVector != NULL)
-	{
-		return pVector->size;
-	}
+    Vector* pVector = (Vector*)hVector;
+    
+    if (pVector != NULL)
+    {
+        return pVector->size;
+    }
 
     // Output error message and return error number if operation failed
     fprintf(stderr, "Could not get vector size.\n");
-	return -123456789;
+    return -123456789;
 }
 
 /**
@@ -237,16 +237,16 @@ int vector_get_size(VECTOR hVector)
 */
 int vector_get_capacity(VECTOR hVector)
 {
-	Vector* pVector = (Vector*)hVector;
-	
-	if (pVector != NULL)
-	{
-		return pVector->capacity;
-	}
-	
+    Vector* pVector = (Vector*)hVector;
+    
+    if (pVector != NULL)
+    {
+        return pVector->capacity;
+    }
+    
     // Output error message and return error number if operation failed
     fprintf(stderr, "Could not get vector capacity.\n");
-	return -123456789;
+    return -123456789;
 }
 
 /**
@@ -263,24 +263,24 @@ int vector_get_capacity(VECTOR hVector)
  */
 char vector_pop_item (VECTOR hVector, unsigned int index)
 {
-	Vector* pVector = (Vector*)hVector;
+    Vector* pVector = (Vector*)hVector;
 
-	// Execute if pVector != NULL
-	if (pVector != NULL)
-	{
-		// Execute if data != NULL
-		if (pVector->data != NULL)
-		{
-			// Execute if index is valid
-			if (pVector->size > index)
-			{
-				return pVector->data[index];
-			}
-		}
-	}
-	
-	// Print error message and return NULL char if not able to get character
-	fprintf(stderr, "Could not get value at index.\n");
+    // Execute if pVector != NULL
+    if (pVector != NULL)
+    {
+        // Execute if data != NULL
+        if (pVector->data != NULL)
+        {
+            // Execute if index is valid
+            if (pVector->size > index)
+            {
+                return pVector->data[index];
+            }
+        }
+    }
+    
+    // Print error message and return NULL char if not able to get character
+    fprintf(stderr, "Could not get value at index.\n");
     return '\0';
 }
 
@@ -295,7 +295,7 @@ char vector_pop_item (VECTOR hVector, unsigned int index)
  */
 void vector_remove_item(VECTOR hVector, unsigned int index)
 {
- 	Vector* pVector = (Vector*)hVector;
+     Vector* pVector = (Vector*)hVector;
         
     // Execute if pVector != NULL
     if (pVector != NULL)
@@ -312,7 +312,7 @@ void vector_remove_item(VECTOR hVector, unsigned int index)
                     pVector->data[i] = pVector->data[i + 1];
                 }
                 
-				// Reduce size by 1
+                // Reduce size by 1
                 pVector->size -= 1;
                 return;
             }
@@ -335,24 +335,23 @@ void vector_remove_item(VECTOR hVector, unsigned int index)
  */
 void vector_print_data(VECTOR hVector, FILE* fp)
 {
-	Vector* pVector = (Vector*)hVector;
+    Vector* pVector = (Vector*)hVector;
 
-	// Execute if pVector != NULL
-	if (pVector != NULL)
-	{
-		// Execute if data != NULL
-		if (pVector->data != NULL)
-		{
-			for (int i = 0; i < pVector->size; ++i)
-			{
+    // Execute if pVector != NULL
+    if (pVector != NULL)
+    {
+        // Execute if data != NULL
+        if (pVector->data != NULL)
+        {
+            for (int i = 0; i < pVector->size; ++i)
+            {
                 fprintf(fp, "%c ", pVector->data[i]);
-			}
-			return;
-		}
-	}
-	
-	// Print error message if data was not printable
-	fprintf(stderr, "Could not print vector data\n");
-	return;
+            }
+            return;
+        }
+    }
+    
+    // Print error message if data was not printable
+    fprintf(stderr, "Could not print vector data\n");
+    return;
 }
-

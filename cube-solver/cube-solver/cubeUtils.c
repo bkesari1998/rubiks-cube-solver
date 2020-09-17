@@ -297,7 +297,7 @@ void assignPieceCoords(int* pX, int* pY, int* pZ, int pieceNum)
     }
     
     // If not on left face or middle layer, piece is on right face
-    if (*pX != 0 & *pX != 1)
+    if ((*pX != 0) && (*pX != 1))
     {
         *pX = 2;
     }

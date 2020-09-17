@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF4B2CD325130245001B3BA2 /* vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = BF4B2CD225130245001B3BA2 /* vectors.c */; };
 		BF4E37CF24AEE7B40033C99A /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = BF4E37CE24AEE7B40033C99A /* main.c */; };
 		BF5323E924B25A95008CD23C /* cubeUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = BF5323E824B25A95008CD23C /* cubeUtils.c */; };
 		BF5323EE24B27648008CD23C /* cubeSolve.c in Sources */ = {isa = PBXBuildFile; fileRef = BF5323ED24B27648008CD23C /* cubeSolve.c */; };
-		BFF656A624D4FE010057F4C8 /* vectors.c in Sources */ = {isa = PBXBuildFile; fileRef = BFF656A524D4FE010057F4C8 /* vectors.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +26,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BF4B2CD125130245001B3BA2 /* vectors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vectors.h; sourceTree = "<group>"; };
+		BF4B2CD225130245001B3BA2 /* vectors.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vectors.c; sourceTree = "<group>"; };
 		BF4E37CB24AEE7B40033C99A /* cube-solver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "cube-solver"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF4E37CE24AEE7B40033C99A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		BF5323E824B25A95008CD23C /* cubeUtils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cubeUtils.c; sourceTree = "<group>"; };
@@ -34,8 +36,6 @@
 		BF5323ED24B27648008CD23C /* cubeSolve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cubeSolve.c; sourceTree = "<group>"; };
 		BFF656A224D4C40F0057F4C8 /* rubiksDef.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rubiksDef.h; sourceTree = "<group>"; };
 		BFF656A324D4FC000057F4C8 /* rubiksDefAssignments.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rubiksDefAssignments.h; sourceTree = "<group>"; };
-		BFF656A424D4FE010057F4C8 /* vectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vectors.h; path = "../../../../Umass-Lowell/COMP-1020/Practice/Vectors/vectors.h"; sourceTree = "<group>"; };
-		BFF656A524D4FE010057F4C8 /* vectors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vectors.c; path = "../../../../Umass-Lowell/COMP-1020/Practice/Vectors/vectors.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,8 +68,8 @@
 		BF4E37CD24AEE7B40033C99A /* cube-solver */ = {
 			isa = PBXGroup;
 			children = (
-				BFF656A524D4FE010057F4C8 /* vectors.c */,
-				BFF656A424D4FE010057F4C8 /* vectors.h */,
+				BF4B2CD125130245001B3BA2 /* vectors.h */,
+				BF4B2CD225130245001B3BA2 /* vectors.c */,
 				BF4E37CE24AEE7B40033C99A /* main.c */,
 				BF5323E824B25A95008CD23C /* cubeUtils.c */,
 				BFF656A224D4C40F0057F4C8 /* rubiksDef.h */,
@@ -138,7 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BFF656A624D4FE010057F4C8 /* vectors.c in Sources */,
+				BF4B2CD325130245001B3BA2 /* vectors.c in Sources */,
 				BF5323EE24B27648008CD23C /* cubeSolve.c in Sources */,
 				BF5323E924B25A95008CD23C /* cubeUtils.c in Sources */,
 				BF4E37CF24AEE7B40033C99A /* main.c in Sources */,
